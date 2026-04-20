@@ -1,0 +1,63 @@
+body {
+  margin:0;
+  background:black;
+  color:white;
+  font-family:Arial;
+}
+
+.bg {
+  position:fixed;
+  inset:0;
+  background: radial-gradient(circle, rgba(255,0,0,0.2), transparent);
+}
+
+header {
+  padding:40px;
+  border-bottom:1px solid #222;
+}
+
+h1 {
+  font-size:40px;
+}
+
+.tag {
+  color:red;
+  letter-spacing:3px;
+}
+
+.hero {
+  padding:40px;
+}
+
+.card {
+  background:rgba(255,255,255,0.05);
+  padding:20px;
+  border-radius:20px;
+}
+
+button {
+  margin:5px;
+  padding:10px;
+  background:#900;
+  color:white;
+  border:none;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  padding:40px;
+}
+
+.box {
+  background:rgba(255,255,255,0.05);
+  padding:20px;
+  text-align:center;
+}
+
+footer {
+  text-align:center;
+  padding:30px;
+  opacity:0.5;
+}
