@@ -2,26 +2,24 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PROJECT MOON ARCHIVE</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
         <h1>PROJECT MOON ARCHIVE</h1>
-        <p>FACING THE FEAR, BUILDING THE FUTURE</p>
+        <div class="game-selector">
+            <button class="game-btn active" data-game="LimbusCompany">LIMBUS COMPANY</button>
+            <button class="game-btn" data-game="LibraryOfRuina">LIBRARY OF RUINA</button>
+            <button class="game-btn" data-game="LobotomyCorp">LOBOTOMY CORP</button>
+        </div>
     </header>
 
-    <div class="search-area">
-        <input type="text" id="search" placeholder="> 輸入關鍵字進行檢索...">
-    </div>
+    <nav id="subnav"></nav>
 
-    <nav id="navbar">
-        <button class="active" data-cat="sinners">12 罪人</button>
-        <button data-cat="sephirah">管理層與司書</button>
-        <button data-cat="enemies">敵對勢力</button>
-        <button data-cat="abnos">異想體圖鑑</button>
-    </nav>
+    <div class="search-area">
+        <input type="text" id="search" placeholder="> 檢索目前的分類...">
+    </div>
 
     <main class="container" id="dataGrid"></main>
 
