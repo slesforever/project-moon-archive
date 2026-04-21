@@ -1,89 +1,267 @@
-:root {
-    --pm-red: #ff3c3c;
-    --pm-gold: #c9a063;
-    --bg-deep: #050505;
-}
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT MOON ARCHIVE | 都市綜合檔案館</title>
+    <style>
+        /* --- 視覺樣式表 (CSS) --- */
+        :root {
+            --pm-red: #ff3c3c;
+            --pm-gold: #c9a063;
+            --bg-dark: #0a0a0a;
+            --card-bg: #161616;
+            --text-gray: #bbb;
+        }
 
-body {
-    background: var(--bg-deep);
-    color: #eee;
-    margin: 0;
-    font-family: "Microsoft JhengHei", sans-serif;
-}
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-header {
-    background: #111;
-    padding: 40px 20px;
-    border-bottom: 2px solid var(--pm-red);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+        body {
+            background-color: var(--bg-dark);
+            color: #eee;
+            font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-nav {
-    display: flex;
-    background: #1a1a1a;
-    padding: 10px;
-    gap: 15px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
+        /* 掃描線特效背景 */
+        body::before {
+            content: " ";
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 4px, 3px 100%;
+            z-index: 1000;
+            pointer-events: none;
+        }
 
-nav button {
-    background: none;
-    border: 1px solid #444;
-    color: #888;
-    padding: 10px 25px;
-    cursor: pointer;
-    transition: 0.3s;
-}
+        header {
+            background: #000;
+            padding: 40px 20px;
+            border-bottom: 2px solid var(--pm-red);
+            text-align: center;
+        }
 
-nav button.active, nav button:hover {
-    border-color: var(--pm-red);
-    color: #fff;
-    background: rgba(255, 60, 60, 0.1);
-}
+        header h1 {
+            font-size: 2.5rem;
+            letter-spacing: 5px;
+            color: #fff;
+            text-shadow: 2px 2px 10px var(--pm-red);
+        }
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
-    padding: 30px;
-}
+        .search-container {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            background: #111;
+        }
 
-.card {
-    background: #161616;
-    border: 1px solid #333;
-    overflow: hidden;
-    transition: 0.3s;
-}
+        #search {
+            width: 100%;
+            max-width: 600px;
+            padding: 15px;
+            background: #000;
+            border: 1px solid var(--pm-red);
+            color: var(--pm-red);
+            font-size: 1rem;
+            outline: none;
+        }
 
-.card:hover {
-    border-color: var(--pm-gold);
-    transform: scale(1.02);
-}
+        nav {
+            display: flex;
+            justify-content: center;
+            background: #1a1a1a;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #333;
+        }
 
-.card img {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-    filter: grayscale(30%);
-}
+        nav button {
+            background: none;
+            border: none;
+            color: #888;
+            padding: 15px 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
 
-.card-info { padding: 15px; }
+        nav button.active {
+            color: #fff;
+            background: var(--pm-red);
+        }
 
-.tag {
-    background: var(--pm-red);
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 3px;
-}
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
 
-input {
-    width: 300px;
-    padding: 12px;
-    background: #000;
-    border: 1px solid var(--pm-red);
-    color: #fff;
-}
+        .card {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: 4px;
+            overflow: hidden;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .card:hover {
+            border-color: var(--pm-gold);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(201, 160, 99, 0.2);
+        }
+
+        .card img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            border-bottom: 1px solid #333;
+            display: block;
+        }
+
+        .card-content {
+            padding: 15px;
+        }
+
+        .tag {
+            font-size: 0.7rem;
+            background: var(--pm-red);
+            padding: 2px 8px;
+            border-radius: 2px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--pm-gold);
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        footer {
+            text-align: center;
+            padding: 50px;
+            color: #444;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>PROJECT MOON ARCHIVE</h1>
+        <p>LOBOTOMY CORP | LIBRARY OF RUINA | LIMBUS COMPANY</p>
+    </header>
+
+    <div class="search-container">
+        <input type="text" id="search" placeholder="輸入關鍵字檢索資料庫...">
+    </div>
+
+    <nav id="mainNav">
+        <button class="active" data-type="sinners">12 罪人</button>
+        <button data-type="sephirah">管理層與司書</button>
+        <button data-type="enemies">主要敵人</button>
+        <button data-type="abnos">異想體圖鑑</button>
+    </nav>
+
+    <main class="grid" id="dataGrid">
+        </main>
+
+    <footer>
+        &copy; PROJECT MOON FAN ARCHIVE. THIS IS A NON-PROFIT FAN PROJECT.
+    </footer>
+
+    <script>
+        /* --- 資料庫 (DB) --- */
+        const DB = {
+            sinners: [
+                { name: "Yi Sang (李箱)", game: "Limbus", desc: "No. 1。前九人會成員，鏡像技術開發者。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/a/a2/Yi_Sang_Portrait.png" },
+                { name: "Faust (浮士德)", game: "Limbus", desc: "No. 2。梅菲斯特號製造者，自稱掌握都市所有知識。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/d/d4/Faust_Portrait.png" },
+                { name: "Don Quixote (唐吉訶德)", game: "Limbus", desc: "No. 3。熱衷於正義與收割者的瘋狂少女。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/0/08/Don_Quixote_Portrait.png" },
+                { name: "Ryoshu (良秀)", game: "Limbus", desc: "No. 4。追求極致藝術與殺戮的劍客。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/8/87/Ryoshu_Portrait.png" },
+                { name: "Meursault (莫索)", game: "Limbus", desc: "No. 5。絕對服從指令，拒絕表達個人感情。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/8/80/Meursault_Portrait.png" },
+                { name: "Hong Lu (鴻璐)", game: "Limbus", desc: "No. 6。世家出身，對世界充滿天真殘酷的好奇。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/3/30/Hong_Lu_Portrait.png" },
+                { name: "Heathcliff (希斯克利夫)", game: "Limbus", desc: "No. 7。性格火爆，為了復仇與愛而戰鬥。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/6/61/Heathcliff_Portrait.png" },
+                { name: "Ishmael (以實瑪利)", game: "Limbus", desc: "No. 8。理性的生還者，對大海有著深刻陰影。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/a/a2/Ishmael_Portrait.png" },
+                { name: "Rodion (羅佳)", game: "Limbus", desc: "No. 9。追求自我特別感的女子。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/0/06/Rodion_Portrait.png" },
+                { name: "Sinclair (辛克萊)", game: "Limbus", desc: "No. 10。徘徊在光明與黑暗間的膽怯少年。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/4/41/Sinclair_Portrait.png" },
+                { name: "Outis (奧緹斯)", game: "Limbus", desc: "No. 11。軍人出身，對管理者有著過度忠誠。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/7/75/Outis_Portrait.png" },
+                { name: "Gregor (格勒哥爾)", game: "Limbus", desc: "No. 12 - 手臂被改造的前軍官。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/d/d8/Gregor_Portrait.png" }
+            ],
+            sephirah: [
+                { name: "Angela (安潔拉)", game: "LC/LoR", desc: "圖書館館長。曾是AI，現追求成為人類。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/c/c5/Angela_Portrait.png" },
+                { name: "Roland (羅蘭)", game: "LoR", desc: "黑色沉默。九階收割者，圖書館的司書助手。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/9/9d/Roland_Portrait.png" },
+                { name: "Binah (比娜)", game: "LC/LoR", desc: "前任首腦(Arbiter)。提取部部長。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/f/f6/Binah_Portrait.png" },
+                { name: "Gebura (葛布拉)", game: "LC/LoR", desc: "最強戰力「紅霧」。懲戒部部長。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/c/c4/Gebura_Portrait.png" }
+            ],
+            enemies: [
+                { name: "Argalia (阿爾加利亞)", game: "LoR", desc: "漆黑樂團，殘響樂團團長，羅蘭的摯友與宿敵。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/3/3d/Argalia_Portrait.png" },
+                { name: "Iori (伊織)", game: "LoR", desc: "紫之淚。穿梭於多個平行世界的神秘特色收割者。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/c/ca/Iori_Portrait.png" }
+            ],
+            abnos: [
+                { name: "Nothing There", game: "ALEPH", desc: "模仿人類皮囊與聲音。最危險的物理威脅之一。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/1/18/Nothing_There_Breach.png" },
+                { name: "WhiteNight", game: "ALEPH", desc: "自詡救世主，擁有十二使徒。一旦出逃即末日。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/b/b3/WhiteNight_Portrait.png" },
+                { name: "Apocalypse Bird", game: "ALEPH", desc: "由三隻大鳥融合而成的審判之鳥。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/3/3d/Apocalypse_Bird_Portrait.png" }
+            ]
+        };
+
+        // --- 程式邏輯 (JavaScript) ---
+        const grid = document.getElementById('dataGrid');
+        const searchInput = document.getElementById('search');
+        const navBtns = document.querySelectorAll('#mainNav button');
+
+        let currentCategory = 'sinners';
+
+        function render() {
+            const keyword = searchInput.value.toLowerCase();
+            const data = DB[currentCategory];
+            
+            grid.innerHTML = '';
+
+            const filtered = data.filter(item => 
+                item.name.toLowerCase().includes(keyword) || 
+                item.desc.toLowerCase().includes(keyword)
+            );
+
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <img src="${item.img}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/280x350?text=IMAGE+ERROR'">
+                    <div class="card-content">
+                        <span class="tag">${item.game}</span>
+                        <h2>${item.name}</h2>
+                        <p>${item.desc}</p>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // 監聽導航按鈕
+        navBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                navBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCategory = btn.dataset.type;
+                render();
+            });
+        });
+
+        // 監聽搜尋框
+        searchInput.addEventListener('input', render);
+
+        // 初始渲染
+        render();
+    </script>
+</body>
+</html>
