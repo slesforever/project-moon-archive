@@ -1,36 +1,100 @@
+<!-- index.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PROJECT MOON ARCHIVE</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<div class="bg"></div>
+<!-- Loading -->
+<div id="loader">
+  <div class="loader-box">
+    <h1>PROJECT MOON ARCHIVE</h1>
+    <p id="loadingText">Connecting to The City...</p>
+    <div class="bar"><span id="barFill"></span></div>
+  </div>
+</div>
 
+<!-- Background -->
+<div class="bg-grid"></div>
+
+<!-- Header -->
 <header>
   <h1>PROJECT MOON ARCHIVE</h1>
   <p>Face the fear. Build the future.</p>
-  <div class="tag">LOBOTOMY // LIBRARY // LIMBUS</div>
 </header>
 
-<section class="hero">
-  <div class="card">
+<!-- Nav -->
+<nav>
+  <button data-page="home">首頁</button>
+  <button data-page="games">三部作品</button>
+  <button data-page="world">都市資料</button>
+  <button data-page="characters">角色庫</button>
+  <button data-page="abnos">異想體</button>
+</nav>
+
+<!-- Main -->
+<main>
+
+<section class="page active" id="home">
+  <div class="hero card">
     <h2>Restricted City Database</h2>
-    <p>Unified archive of L Corp, Library, and Limbus Company.</p>
-    <button>Explore Lore</button>
-    <button>Characters</button>
-    <button>Abnormalities</button>
+    <p>被封鎖的都市機密檔案館已啟動。</p>
+    <p>整合 Lobotomy Corporation / Library of Ruina / Limbus Company。</p>
+  </div>
+
+  <div class="grid">
+    <div class="card mini">Wings</div>
+    <div class="card mini">Fixers</div>
+    <div class="card mini">Distortions</div>
+    <div class="card mini">The Head</div>
   </div>
 </section>
 
-<section class="grid">
-  <div class="box">Wings</div>
-  <div class="box">Fixers</div>
-  <div class="box">Distortions</div>
-  <div class="box">The Head</div>
+<section class="page" id="games">
+  <div class="grid">
+    <div class="card">
+      <h2>Lobotomy Corporation</h2>
+      <p>異想體管理模擬、高壓經營、Sephirah 部門系統。</p>
+    </div>
+    <div class="card">
+      <h2>Library of Ruina</h2>
+      <p>書籍化戰鬥、樓層構築、Roland 與 Angela 的故事。</p>
+    </div>
+    <div class="card">
+      <h2>Limbus Company</h2>
+      <p>十二罪人、身份系統、E.G.O 與黃金枝遠征。</p>
+    </div>
+  </div>
 </section>
+
+<section class="page" id="world">
+  <div class="grid">
+    <div class="card">Nests：受保護區域</div>
+    <div class="card">Backstreets：混亂街區</div>
+    <div class="card">Associations：協會</div>
+    <div class="card">Syndicates：幫派</div>
+    <div class="card">Sweepers：清道夫</div>
+    <div class="card">Thumb / Index / Middle</div>
+  </div>
+</section>
+
+<section class="page" id="characters">
+  <div class="card">
+    <input type="text" id="search" placeholder="搜尋角色...">
+  </div>
+
+  <div class="grid" id="charGrid"></div>
+</section>
+
+<section class="page" id="abnos">
+  <div class="grid" id="abnoGrid"></div>
+</section>
+
+</main>
 
 <footer>
 Unofficial fan archive inspired by Project Moon.
