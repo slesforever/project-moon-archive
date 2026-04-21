@@ -43,30 +43,31 @@ const MASTER_DB = {
         }
     },
     "LobotomyCorp": {
-        "title": "LOBOTOMY CORP",
         "categories": {
             "founders": {
                 "label": "創始者",
                 "items": [
-                    { name: "Ayin", tag: "Founder", desc: "A。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/0/05/Ayin_Portrait.png", details: "腦葉創始者。", fullStory: "推動計劃。" },
-                    { name: "Carmen", tag: "Inspirer", desc: "C。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/6/6b/Carmen_Portrait.png", details: "光的源頭。", fullStory: "化為核心。" },
-                    { name: "Angela", tag: "AI", desc: "秘書。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/c/c5/Angela_Portrait.png", details: "卡門形象的 AI。", fullStory: "在循環中累積。" }
+                    { name: "Ayin", tag: "Founder", img: "https://static.wikia.nocookie.net/lobotomycorp/images/0/05/Ayin_Portrait.png" },
+                    { name: "Carmen", tag: "Inspirer", img: "https://static.wikia.nocookie.net/lobotomycorp/images/6/6b/Carmen_Portrait.png" },
+                    { name: "Angela", tag: "AI", img: "https://static.wikia.nocookie.net/lobotomycorp/images/c/c5/Angela_Portrait.png" }
                 ]
             },
             "sephirah": {
                 "label": "部門主管",
                 "items": [
-                    { name: "Malkuth", tag: "控制部", desc: "上層主管。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/a/a2/Malkuth_Portrait.png", details: "急於證實自己。", fullStory: "管理日常事務。" },
-                    { name: "Yesod", tag: "情報部", desc: "上層主管。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/8/80/Yesod_Portrait.png", details: "嚴守紀律。", fullStory: "不允許遺漏。" },
-                    { name: "Hod", tag: "培訓部", desc: "上層主管。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/1/10/Hod_Portrait.png", details: "要做個好人。", fullStory: "員工心理輔導。" },
-                    { name: "Netzach", tag: "安保部", desc: "上層主管。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/4/41/Netzach_Portrait.png", details: "對生命無眷念。", fullStory: "藥物逃避。" },
-                    { name: "Tiphereth", tag: "中央本部", desc: "中層主管。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/2/2a/Tiphereth_Portrait.png", details: "雙生子主管。", fullStory: "維持平衡。" },
-                    { name: "Gebura", tag: "懲戒部", desc: "中層主管。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/c/c4/Gebura_Portrait.png", details: "武力鎮壓。", fullStory: "公司的劍與盾。" },
-                    { name: "Chesed", tag: "福利部", desc: "中層主管。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/c/c6/Chesed_Portrait.png", details: "關懷員工。", fullStory: "尋求溫情。" },
-                    { name: "Binah", tag: "研發部", desc: "下層主管。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/f/f6/Binah_Portrait.png", details: "萃取異想體。", fullStory: "黑暗井底。" },
-                    { name: "Hokma", tag: "記錄部", desc: "下層主管。", img: "https://static.wikia.nocookie.net/lobotomycorp/images/e/e0/Hokma_Portrait.png", details: "時間管理者。", fullStory: "守護秘密。" }
+                    { name: "Malkuth", tag: "控制部", img: "https://static.wikia.nocookie.net/lobotomycorp/images/a/a2/Malkuth_Portrait.png" },
+                    { name: "Yesod", tag: "情報部", img: "https://static.wikia.nocookie.net/lobotomycorp/images/8/80/Yesod_Portrait.png" },
+                    { name: "Hod", tag: "培訓部", img: "https://static.wikia.nocookie.net/lobotomycorp/images/1/10/Hod_Portrait.png" },
+                    { name: "Netzach", tag: "安保部", img: "https://static.wikia.nocookie.net/lobotomycorp/images/4/41/Netzach_Portrait.png" },
+                    { name: "Tiphereth", tag: "中央本部", img: "https://static.wikia.nocookie.net/lobotomycorp/images/2/2a/Tiphereth_Portrait.png" },
+                    { name: "Gebura", tag: "懲戒部", img: "https://static.wikia.nocookie.net/lobotomycorp/images/c/c4/Gebura_Portrait.png" },
+                    { name: "Chesed", tag: "福利部", img: "https://static.wikia.nocookie.net/lobotomycorp/images/c/c6/Chesed_Portrait.png" },
+                    { name: "Binah", tag: "研發部", img: "https://static.wikia.nocookie.net/lobotomycorp/images/f/f6/Binah_Portrait.png" },
+                    { name: "Hokma", tag: "記錄部", img: "https://static.wikia.nocookie.net/lobotomycorp/images/e/e0/Hokma_Portrait.png" }
                 ]
             }
         }
+    }
+};
     }
 };
