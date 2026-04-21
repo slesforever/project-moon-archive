@@ -2,8 +2,7 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PROJECT MOON ARCHIVE | 都市檔案館</title>
+    <title>PROJECT MOON ARCHIVE</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -19,25 +18,25 @@
     <nav id="subnav"></nav>
 
     <div class="search-area">
-        <input type="text" id="search" placeholder="> 檢索目前分區之資料...">
+        <input type="text" id="search" placeholder="> 檢索機密檔案...">
     </div>
 
     <main class="container" id="dataGrid"></main>
 
     <div id="detailModal" class="modal">
         <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <div class="modal-body">
-                <div class="modal-image-container">
-                    <img id="modalImg" src="" alt="">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div class="modal-layout">
+                <div class="modal-image-side">
+                    <img id="modalImg" src="">
                 </div>
-                <div class="modal-text-container">
+                <div class="modal-text-side">
                     <h2 id="modalTitle"></h2>
                     <div class="modal-tabs">
-                        <button id="tabDetailsBtn" class="tab-btn active">詳細介紹</button>
-                        <button id="tabStoryBtn" class="tab-btn">背景故事</button>
+                        <button id="btnDetails" class="tab-btn active" onclick="setTab('details')">檔案介紹</button>
+                        <button id="btnStory" class="tab-btn" onclick="setTab('story')">核心故事</button>
                     </div>
-                    <div id="tabContent" class="tab-display"></div>
+                    <div id="modalBodyText" class="modal-body-text"></div>
                 </div>
             </div>
         </div>
