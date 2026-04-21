@@ -1,115 +1,29 @@
-:root {
-    --pm-red: #ff3c3c;
-    --pm-gold: #c9a063;
-    --bg-dark: #050505;
-    --card-bg: #111;
-}
+:root { --pm-red: #ff3c3c; --pm-gold: #c9a063; --bg: #050505; }
+body { background: var(--bg); color: #eee; font-family: sans-serif; margin: 0; }
+header { padding: 30px; text-align: center; border-bottom: 2px solid var(--pm-red); background: #000; box-shadow: 0 0 20px rgba(255,60,60,0.2); }
+.game-selector { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
+.game-btn { background: none; border: 1px solid var(--pm-gold); color: var(--pm-gold); padding: 8px 15px; cursor: pointer; transition: 0.3s; }
+.game-btn.active { background: var(--pm-gold); color: #000; box-shadow: 0 0 10px var(--pm-gold); }
+#subnav { background: #111; display: flex; justify-content: center; padding: 10px; gap: 20px; border-bottom: 1px solid #333; }
+#subnav button { background: none; border: none; color: #666; cursor: pointer; font-size: 1rem; }
+#subnav button.active { color: var(--pm-red); border-bottom: 2px solid var(--pm-red); font-weight: bold; }
+.container { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 25px; padding: 40px; }
+.card { background: #0a0a0a; border: 1px solid #222; cursor: pointer; transition: 0.3s; }
+.card:hover { border-color: var(--pm-gold); transform: translateY(-5px); box-shadow: 0 0 15px rgba(201,160,99,0.3); }
+.img-box { width: 100%; height: 300px; background: #000; overflow: hidden; }
+.img-box img { width: 100%; height: 100%; object-fit: contain; }
+.card-info { padding: 15px; text-align: center; border-top: 1px solid #222; }
 
-body {
-    background-color: var(--bg-dark);
-    color: #eee;
-    font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
-    margin: 0;
-}
-
-header {
-    background: #000;
-    padding: 30px;
-    text-align: center;
-    border-bottom: 2px solid var(--pm-red);
-}
-
-.game-selector {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
-
-.game-btn {
-    background: transparent;
-    border: 1px solid var(--pm-gold);
-    color: var(--pm-gold);
-    padding: 8px 15px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.game-btn.active {
-    background: var(--pm-gold);
-    color: #000;
-}
-
-#subnav {
-    display: flex;
-    justify-content: center;
-    background: #111;
-    padding: 10px;
-    gap: 20px;
-}
-
-#subnav button {
-    background: none; border: none; color: #666;
-    padding: 10px; cursor: pointer; font-size: 1rem;
-}
-
-#subnav button.active {
-    color: var(--pm-red);
-    border-bottom: 2px solid var(--pm-red);
-}
-
-.container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-    padding: 30px;
-}
-
-.card {
-    background: var(--card-bg);
-    border: 1px solid #333;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.card:hover { transform: translateY(-5px); border-color: var(--pm-gold); }
-
-.card-img-wrap { width: 100%; height: 350px; background: #000; overflow: hidden; }
-
-.card img { width: 100%; height: 100%; object-fit: contain; }
-
-.card-info { padding: 15px; text-align: center; }
-
-/* Modal 樣式 */
-.modal {
-    display: none; position: fixed; z-index: 100;
-    left: 0; top: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.9);
-}
-
-.modal-content {
-    background: #111; margin: 5% auto; padding: 30px;
-    width: 80%; max-width: 1000px; border: 1px solid var(--pm-red);
-    position: relative;
-}
-
-.modal-body { display: flex; gap: 30px; }
-
-.modal-image-container { width: 40%; }
-
-.modal-image-container img { width: 100%; object-fit: contain; }
-
-.modal-text-container { flex: 1; }
-
-.modal-tabs { border-bottom: 1px solid #333; margin: 15px 0; }
-
-.tab-btn {
-    background: none; border: none; color: #555;
-    padding: 10px 20px; cursor: pointer; font-size: 1.1rem;
-}
-
-.tab-btn.active { color: var(--pm-red); border-bottom: 2px solid var(--pm-red); }
-
-.tab-display { line-height: 1.8; white-space: pre-wrap; color: #ccc; }
-
-.close-btn { position: absolute; right: 20px; top: 10px; font-size: 30px; cursor: pointer; }
+/* 彈窗設計 */
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; }
+.modal-content { background: #0a0a0a; margin: 4% auto; width: 85%; max-width: 1000px; padding: 35px; border: 1px solid var(--pm-red); position: relative; box-shadow: 0 0 40px rgba(255,60,60,0.4); }
+.modal-layout { display: flex; gap: 40px; }
+.modal-image-side { width: 35%; }
+.modal-image-side img { width: 100%; border: 1px solid #222; }
+.modal-text-side { flex: 1; display: flex; flex-direction: column; }
+.modal-tabs { border-bottom: 1px solid #333; margin-bottom: 20px; display: flex; gap: 10px; }
+.tab-btn { background: none; border: none; color: #555; padding: 10px 15px; cursor: pointer; font-size: 1.1rem; }
+.tab-btn.active { color: var(--pm-red); border-bottom: 2px solid var(--pm-red); font-weight: bold; }
+.modal-body-text { line-height: 1.8; color: #bbb; white-space: pre-wrap; font-size: 1.05rem; flex: 1; overflow-y: auto; max-height: 400px; padding-right: 10px; }
+.close-btn { position: absolute; right: 20px; top: 10px; font-size: 2.5rem; color: #fff; cursor: pointer; transition: 0.3s; }
+.close-btn:hover { color: var(--pm-red); }
