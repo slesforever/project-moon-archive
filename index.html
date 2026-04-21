@@ -8,30 +8,26 @@
     <style>
         :root { --pm-gold: #d4af37; --pm-red: #ff3c3c; --pm-bg: #0a0a0a; }
         body { background: var(--pm-bg); color: white; font-family: "Microsoft JhengHei", sans-serif; margin: 0; }
-        header { text-align: center; padding: 40px 20px; border-bottom: 2px solid var(--pm-red); }
+        header { text-align: center; padding: 30px 20px; border-bottom: 2px solid var(--pm-red); }
         .game-nav, .sub-nav { display: flex; justify-content: center; gap: 15px; margin: 20px 0; flex-wrap: wrap; }
         button { 
             background: transparent; border: 1px solid var(--pm-gold); color: var(--pm-gold);
             padding: 10px 20px; cursor: pointer; transition: 0.3s;
         }
         button.active, button:hover { background: var(--pm-gold); color: black; }
-        .sub-nav button { border-color: #666; color: #aaa; font-size: 0.9em; }
+        .sub-nav button { border-color: #555; color: #888; font-size: 0.9em; }
         .sub-nav button.active { border-color: var(--pm-red); color: var(--pm-red); background: transparent; }
-        
         #dataGrid { 
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
-            gap: 25px; padding: 40px; max-width: 1200px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+            gap: 20px; padding: 20px; max-width: 1200px; margin: 0 auto;
         }
-        .card { 
-            background: #151515; border: 1px solid #333; overflow: hidden;
-            cursor: pointer; transition: transform 0.2s;
-        }
-        .card:hover { transform: translateY(-5px); border-color: var(--pm-gold); }
+        .card { background: #151515; border: 1px solid #333; overflow: hidden; cursor: pointer; transition: 0.2s; }
+        .card:hover { border-color: var(--pm-gold); transform: translateY(-3px); }
         .img-box { width: 100%; aspect-ratio: 3/4; background: #000; overflow: hidden; }
         .img-box img { width: 100%; height: 100%; object-fit: cover; }
-        .card-info { padding: 15px; text-align: center; }
-        .card-info h3 { margin: 10px 0 5px; font-size: 1.1em; }
-        .card-info small { color: var(--pm-red); font-weight: bold; }
+        .card-info { padding: 12px; text-align: center; }
+        .card-info h3 { margin: 5px 0; font-size: 1em; }
+        .card-info small { color: var(--pm-red); display: block; margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -48,108 +44,59 @@
 
 <div id="dataGrid"></div>
 
+<script src="db.js"></script>
 <script>
-// 直接內嵌資料庫，避免讀取錯誤
-const MASTER_DB = {
-    "LimbusCompany": {
-        "categories": {
-            "sinners": { "label": "12 罪人", "items": [
-                { name: "Yi Sang", tag: "No. 01", img: "https://static.wikia.nocookie.net/lobotomycorp/images/a/a2/Yi_Sang_Portrait.png" },
-                { name: "Faust", tag: "No. 02", img: "https://static.wikia.nocookie.net/lobotomycorp/images/d/d4/Faust_Portrait.png" },
-                { name: "Don Quixote", tag: "No. 03", img: "https://static.wikia.nocookie.net/lobotomycorp/images/0/08/Don_Quixote_Portrait.png" },
-                { name: "Ryōshū", tag: "No. 04", img: "https://static.wikia.nocookie.net/lobotomycorp/images/8/87/Ryoshu_Portrait.png" },
-                { name: "Meursault", tag: "No. 05", img: "https://static.wikia.nocookie.net/lobotomycorp/images/8/80/Meursault_Portrait.png" },
-                { name: "Hong Lu", tag: "No. 06", img: "https://static.wikia.nocookie.net/lobotomycorp/images/3/30/Hong_Lu_Portrait.png" },
-                { name: "Heathcliff", tag: "No. 07", img: "https://static.wikia.nocookie.net/lobotomycorp/images/6/61/Heathcliff_Portrait.png" },
-                { name: "Ishmael", tag: "No. 08", img: "https://static.wikia.nocookie.net/lobotomycorp/images/a/a2/Ishmael_Portrait.png" },
-                { name: "Rodion", tag: "No. 09", img: "https://static.wikia.nocookie.net/lobotomycorp/images/0/06/Rodion_Portrait.png" },
-                { name: "Sinclair", tag: "No. 10", img: "https://static.wikia.nocookie.net/lobotomycorp/images/4/41/Sinclair_Portrait.png" },
-                { name: "Outis", tag: "No. 11", img: "https://static.wikia.nocookie.net/lobotomycorp/images/7/75/Outis_Portrait.png" },
-                { name: "Gregor", tag: "No. 12", img: "https://static.wikia.nocookie.net/lobotomycorp/images/d/d8/Gregor_Portrait.png" }
-            ]}
-        }
-    },
-    "LibraryOfRuina": {
-        "categories": {
-            "librarians": { "label": "全層總司書", "items": [
-                { name: "Roland", tag: "總類層", img: "https://static.wikia.nocookie.net/lobotomycorp/images/9/9d/Roland_Portrait.png" },
-                { name: "Angela", tag: "館長", img: "https://static.wikia.nocookie.net/lobotomycorp/images/c/c5/Angela_Portrait.png" },
-                { name: "Malkuth", tag: "歷史層", img: "https://static.wikia.nocookie.net/lobotomycorp/images/a/a2/Malkuth_Portrait.png" },
-                { name: "Yesod", tag: "科技層", img: "https://static.wikia.nocookie.net/lobotomycorp/images/8/80/Yesod_Portrait.png" },
-                { name: "Hod", tag: "文學層", img: "https://static.wikia.nocookie.net/lobotomycorp/images/1/10/Hod_Portrait.png" },
-                { name: "Netzach", tag: "藝術層", img: "https://static.wikia.nocookie.net/lobotomycorp/images/4/41/Netzach_Portrait.png" },
-                { name: "Gebura", tag: "語言層", img: "https://static.wikia.nocookie.net/lobotomycorp/images/c/c4/Gebura_Portrait.png" },
-                { name: "Chesed", tag: "社會層", img: "https://static.wikia.nocookie.net/lobotomycorp/images/c/c6/Chesed_Portrait.png" },
-                { name: "Binah", tag: "哲學層", img: "https://static.wikia.nocookie.net/lobotomycorp/images/f/f6/Binah_Portrait.png" },
-                { name: "Hokma", tag: "宗教層", img: "https://static.wikia.nocookie.net/lobotomycorp/images/e/e0/Hokma_Portrait.png" }
-            ]}
-        }
-    },
-    "LobotomyCorp": {
-        "categories": {
-            "founders": { "label": "創始者", "items": [
-                { name: "Ayin", tag: "Founder", img: "https://static.wikia.nocookie.net/lobotomycorp/images/0/05/Ayin_Portrait.png" },
-                { name: "Carmen", tag: "Inspirer", img: "https://static.wikia.nocookie.net/lobotomycorp/images/6/6b/Carmen_Portrait.png" }
-            ]},
-            "sephirah": { "label": "部門主管", "items": [
-                { name: "Malkuth", tag: "控制部", img: "https://static.wikia.nocookie.net/lobotomycorp/images/a/a2/Malkuth_Portrait.png" },
-                { name: "Yesod", tag: "情報部", img: "https://static.wikia.nocookie.net/lobotomycorp/images/8/80/Yesod_Portrait.png" },
-                { name: "Gebura", tag: "懲戒部", img: "https://static.wikia.nocookie.net/lobotomycorp/images/c/c4/Gebura_Portrait.png" },
-                { name: "Binah", tag: "研發部", img: "https://static.wikia.nocookie.net/lobotomycorp/images/f/f6/Binah_Portrait.png" }
-            ]}
-        }
+    let currentG = 'LimbusCompany';
+    let currentC = '';
+
+    function switchGame(g, btn) {
+        currentG = g;
+        document.querySelectorAll('.game-nav button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        const cats = MASTER_DB[g].categories;
+        const subNav = document.getElementById('subNav');
+        subNav.innerHTML = '';
+        
+        const catKeys = Object.keys(cats);
+        catKeys.forEach((key, i) => {
+            const b = document.createElement('button');
+            b.innerText = cats[key].label;
+            b.onclick = () => {
+                currentC = key;
+                document.querySelectorAll('.sub-nav button').forEach(sb => sb.classList.remove('active'));
+                b.classList.add('active');
+                render();
+            };
+            if(i === 0) { b.classList.add('active'); currentC = key; }
+            subNav.appendChild(b);
+        });
+        render();
     }
-};
 
-let currentG = 'LimbusCompany';
-let currentC = 'sinners';
+    function render() {
+        const grid = document.getElementById('dataGrid');
+        grid.innerHTML = '';
+        const items = MASTER_DB[currentG].categories[currentC].items;
+        
+        items.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            // 透過移除網址中的 revision 參數來獲取原始大圖
+            const cleanImg = item.img.split('/revision/')[0];
+            card.innerHTML = `
+                <div class="img-box"><img src="${cleanImg}" loading="lazy"></div>
+                <div class="card-info">
+                    <small>${item.tag}</small>
+                    <h3>${item.name}</h3>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
 
-function switchGame(g, btn) {
-    currentG = g;
-    document.querySelectorAll('.game-nav button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    
-    const cats = MASTER_DB[g].categories;
-    const subNav = document.getElementById('subNav');
-    subNav.innerHTML = '';
-    
-    Object.keys(cats).forEach((key, i) => {
-        const b = document.createElement('button');
-        b.innerText = cats[key].label;
-        b.onclick = () => {
-            currentC = key;
-            document.querySelectorAll('.sub-nav button').forEach(sb => sb.classList.remove('active'));
-            b.classList.add('active');
-            render();
-        };
-        if(i === 0) { b.classList.add('active'); currentC = key; }
-        subNav.appendChild(b);
-    });
-    render();
-}
-
-function render() {
-    const grid = document.getElementById('dataGrid');
-    grid.innerHTML = '';
-    const items = MASTER_DB[currentG].categories[currentC].items;
-    
-    items.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        // 使用原始連結，透過 no-referrer 繞過檢查
-        card.innerHTML = `
-            <div class="img-box"><img src="${item.img}" loading="lazy"></div>
-            <div class="card-info">
-                <small>${item.tag}</small>
-                <h3>${item.name}</h3>
-            </div>
-        `;
-        grid.appendChild(card);
-    });
-}
-
-// 初始啟動
-switchGame('LimbusCompany', document.querySelector('.game-nav button'));
+    // 初始化
+    window.onload = () => switchGame('LimbusCompany', document.querySelector('.game-nav button'));
 </script>
 </body>
 </html>
