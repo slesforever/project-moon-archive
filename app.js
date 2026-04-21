@@ -9,10 +9,10 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentCat = '';
     let selectedItem = null;
 
-    // 【新代理策略】使用 WordPress 的圖片 CDN 繞過防盜連
+    
     function getSafeImg(url) {
         if (!url) return 'https://via.placeholder.com/300x400?text=No+Image';
-        // 移除網址中的任何 https:// 前綴並加上 i0.wp.com 代理
+        
         const cleanUrl = url.replace(/^https?:\/\//, '');
         return `https://i0.wp.com/${cleanUrl}`;
     }
