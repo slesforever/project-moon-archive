@@ -5,98 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PROJECT MOON ARCHIVE</title>
     <meta name="referrer" content="no-referrer">
-    <style>
-        :root { --pm-gold: #d4af37; --pm-red: #ff3c3c; --pm-bg: #0a0a0a; }
-        body { background: var(--pm-bg); color: white; font-family: "Microsoft JhengHei", sans-serif; margin: 0; }
-        header { text-align: center; padding: 30px 20px; border-bottom: 2px solid var(--pm-red); }
-        .game-nav, .sub-nav { display: flex; justify-content: center; gap: 15px; margin: 20px 0; flex-wrap: wrap; }
-        button { 
-            background: transparent; border: 1px solid var(--pm-gold); color: var(--pm-gold);
-            padding: 10px 20px; cursor: pointer; transition: 0.3s;
-        }
-        button.active, button:hover { background: var(--pm-gold); color: black; }
-        .sub-nav button { border-color: #555; color: #888; font-size: 0.9em; }
-        .sub-nav button.active { border-color: var(--pm-red); color: var(--pm-red); background: transparent; }
-        #dataGrid { 
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
-            gap: 20px; padding: 20px; max-width: 1200px; margin: 0 auto;
-        }
-        .card { background: #151515; border: 1px solid #333; overflow: hidden; cursor: pointer; transition: 0.2s; }
-        .card:hover { border-color: var(--pm-gold); transform: translateY(-3px); }
-        .img-box { width: 100%; aspect-ratio: 3/4; background: #000; overflow: hidden; }
-        .img-box img { width: 100%; height: 100%; object-fit: cover; }
-        .card-info { padding: 12px; text-align: center; }
-        .card-info h3 { margin: 5px 0; font-size: 1em; }
-        .card-info small { color: var(--pm-red); display: block; margin-bottom: 5px; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <header>
+        <div class="logo">PROJECT MOON ARCHIVE</div>
+        <div class="game-nav">
+            <button class="game-btn active" data-game="LimbusCompany">LIMBUS COMPANY</button>
+            <button class="game-btn" data-game="LibraryOfRuina">LIBRARY OF RUINA</button>
+            <button class="game-btn" data-game="LobotomyCorp">LOBOTOMY CORP</button>
+        </div>
+        <div class="sub-nav-container">
+            <div id="subnav" class="sub-nav"></div>
+        </div>
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="搜尋檔案名稱...">
+        </div>
+    </header>
 
-<header>
-    <h1>PROJECT MOON ARCHIVE</h1>
-    <div class="game-nav" id="gameNav">
-        <button class="active" onclick="switchGame('LimbusCompany', this)">LIMBUS COMPANY</button>
-        <button onclick="switchGame('LibraryOfRuina', this)">LIBRARY OF RUINA</button>
-        <button onclick="switchGame('LobotomyCorp', this)">LOBOTOMY CORP</button>
-    </div>
-    <div class="sub-nav" id="subNav"></div>
-</header>
+    <main id="dataGrid" class="grid-container"></main>
 
-<div id="dataGrid"></div>
-
-<script src="db.js"></script>
-<script>
-    let currentG = 'LimbusCompany';
-    let currentC = '';
-
-    function switchGame(g, btn) {
-        currentG = g;
-        document.querySelectorAll('.game-nav button').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        
-        const cats = MASTER_DB[g].categories;
-        const subNav = document.getElementById('subNav');
-        subNav.innerHTML = '';
-        
-        const catKeys = Object.keys(cats);
-        catKeys.forEach((key, i) => {
-            const b = document.createElement('button');
-            b.innerText = cats[key].label;
-            b.onclick = () => {
-                currentC = key;
-                document.querySelectorAll('.sub-nav button').forEach(sb => sb.classList.remove('active'));
-                b.classList.add('active');
-                render();
-            };
-            if(i === 0) { b.classList.add('active'); currentC = key; }
-            subNav.appendChild(b);
-        });
-        render();
-    }
-
-    function render() {
-        const grid = document.getElementById('dataGrid');
-        grid.innerHTML = '';
-        const items = MASTER_DB[currentG].categories[currentC].items;
-        
-        items.forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            // 透過移除網址中的 revision 參數來獲取原始大圖
-            const cleanImg = item.img.split('/revision/')[0];
-            card.innerHTML = `
-                <div class="img-box"><img src="${cleanImg}" loading="lazy"></div>
-                <div class="card-info">
-                    <small>${item.tag}</small>
-                    <h3>${item.name}</h3>
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="modal-header">
+                <img id="modalImg" src="" alt="Portrait">
+                <div class="header-info">
+                    <h2 id="modalTitle"></h2>
+                    <p id="modalTag"></p>
                 </div>
-            `;
-            grid.appendChild(card);
-        });
-    }
+            </div>
+            <div class="modal-tabs">
+                <button class="tab-btn active" id="btnDetails" onclick="setTab('details')">檔案介紹</button>
+                <button class="tab-btn" id="btnStory" onclick="setTab('story')">個人背景</button>
+                <button class="tab-btn" id="btnChapter" onclick="setTab('chapter')">章節/紀錄</button>
+            </div>
+            <div class="modal-body">
+                <div id="modalBodyText" class="story-content"></div>
+            </div>
+        </div>
+    </div>
 
-    // 初始化
-    window.onload = () => switchGame('LimbusCompany', document.querySelector('.game-nav button'));
-</script>
+    <script src="db.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
