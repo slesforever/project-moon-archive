@@ -9,19 +9,18 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentCat = '';
     let selectedItem = null;
 
-    // 影像修復代理 (防止 Wiki 擋圖)
+    // 【重要修復】影像代理函數：繞過 Wiki 防盜連並優化加載
     function getSafeImg(url) {
+        if (!url) return 'https://via.placeholder.com/300x400?text=No+Image';
+        // 使用 wsrv.nl 代理服務，這能有效解決 Fandom 圖片無法顯示的問題
         return `https://wsrv.nl/?url=${encodeURIComponent(url)}&output=webp`;
     }
 
     function switchGame(gameKey) {
         if (!MASTER_DB[gameKey]) return;
         currentGame = gameKey;
-        
-        // 更新按鈕狀態
         gameBtns.forEach(b => b.classList.toggle('active', b.dataset.game === gameKey));
         
-        // 更新分類導航
         const cats = MASTER_DB[gameKey].categories;
         subnav.innerHTML = '';
         Object.keys(cats).forEach((key, i) => {
@@ -31,13 +30,11 @@ document.addEventListener("DOMContentLoaded", () => {
             if(i === 0) btn.className = 'active';
             subnav.appendChild(btn);
         });
-        
         switchCategory(Object.keys(cats)[0]);
     }
 
     function switchCategory(catKey) {
         currentCat = catKey;
-        // 更新分類按鈕外觀
         Array.from(subnav.children).forEach(btn => {
             btn.classList.toggle('active', btn.innerText === MASTER_DB[currentGame].categories[catKey].label);
         });
@@ -54,8 +51,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.onclick = () => openModal(item);
+                // 這裡套用了 getSafeImg
                 card.innerHTML = `
-                    <div class="img-box"><img src="${getSafeImg(item.img)}"></div>
+                    <div class="img-box">
+                        <img src="${getSafeImg(item.img)}" loading="lazy" alt="${item.name}">
+                    </div>
                     <div class="card-info">
                         <small style="color:#ff3c3c">${item.tag}</small>
                         <h3>${item.name}</h3>
@@ -69,6 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.openModal = (item) => {
         selectedItem = item;
         document.getElementById('modalTitle').innerText = item.name;
+        // 彈窗內的圖片也要修復
         document.getElementById('modalImg').src = getSafeImg(item.img);
         setTab('details');
         modal.style.display = 'block';
@@ -80,29 +81,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const textArea = document.getElementById('modalBodyText');
         const btnD = document.getElementById('btnDetails');
         const btnS = document.getElementById('btnStory');
-        
         if(type === 'details') {
             textArea.innerText = selectedItem.details;
-            btnD.classList.add('active');
-            btnS.classList.remove('active');
+            btnD.classList.add('active'); btnS.classList.remove('active');
         } else {
             textArea.innerText = selectedItem.fullStory;
-            btnS.classList.add('active');
-            btnD.classList.remove('active');
+            btnS.classList.add('active'); btnD.classList.remove('active');
         }
     };
 
-    // 初始化與事件綁定
-    gameBtns.forEach(btn => {
-        btn.onclick = () => switchGame(btn.dataset.game);
-    });
-    
+    gameBtns.forEach(btn => btn.onclick = () => switchGame(btn.dataset.game));
     searchInput.oninput = render;
-    
-    // 啟動預設遊戲
-    if (typeof MASTER_DB !== 'undefined') {
-        switchGame('LimbusCompany');
-    } else {
-        console.error("Critical: MASTER_DB is missing!");
-    }
+    switchGame('LimbusCompany');
 });
