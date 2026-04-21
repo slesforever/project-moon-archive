@@ -2,27 +2,28 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>PROJECT MOON ARCHIVE | 都市最高密級</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT MOON ARCHIVE</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <div class="logo-box">
-            <h1>PROJECT MOON ARCHIVE</h1>
-            <p>FACING THE FEAR, BUILDING THE FUTURE.</p>
-        </div>
-        <div class="search-box">
-            <input type="text" id="search" placeholder="輸入關鍵字檢索資料庫...">
-        </div>
+        <h1>PROJECT MOON ARCHIVE</h1>
+        <p>FACING THE FEAR, BUILDING THE FUTURE</p>
     </header>
 
-    <nav>
-        <button class="active" data-type="chars">角色與敵人</button>
-        <button data-type="abnos">異想體圖鑑</button>
-        <button data-type="world">都市章節故事</button>
+    <div class="search-area">
+        <input type="text" id="search" placeholder="> 輸入關鍵字進行檢索...">
+    </div>
+
+    <nav id="navbar">
+        <button class="active" data-cat="sinners">12 罪人</button>
+        <button data-cat="sephirah">管理層與司書</button>
+        <button data-cat="enemies">敵對勢力</button>
+        <button data-cat="abnos">異想體圖鑑</button>
     </nav>
 
-    <main id="dataGrid" class="grid"></main>
+    <main class="container" id="dataGrid"></main>
 
     <script src="db.js"></script>
     <script src="app.js"></script>
