@@ -3,47 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PROJECT MOON ARCHIVE | 月球計畫檔案</title>
+    <title>PROJECT MOON ARCHIVE | 專案太陽檔案</title>
     <meta name="referrer" content="no-referrer">
     <style>
         :root { --pm-bg: #0a0a0a; --pm-red: #ff3c3c; --pm-gold: #d4af37; --card-bg: #151515; --text: #e0e0e0; }
-        body { background: var(--pm-bg); color: var(--text); margin: 0; font-family: "Segoe UI", "Microsoft JhengHei", sans-serif; }
+        body { background: var(--pm-bg); color: var(--text); margin: 0; font-family: "Segoe UI", "Microsoft JhengHei", sans-serif; overflow-x: hidden; }
         
-        /* 頂部區域 */
-        header { background: linear-gradient(to bottom, #1a0000, #0a0a0a); padding: 30px; border-bottom: 2px solid var(--pm-red); text-align: center; }
-        .logo { font-size: 2.2em; letter-spacing: 5px; text-shadow: 0 0 10px var(--pm-red); margin-bottom: 20px; font-weight: bold; }
-        
-        /* 導航鈕 */
+        /* Header & Nav */
+        header { background: linear-gradient(to bottom, #1a0000, #0a0a0a); padding: 30px; border-bottom: 2px solid var(--pm-red); text-align: center; position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 2.2em; letter-spacing: 5px; text-shadow: 0 0 10px var(--pm-red); margin-bottom: 20px; font-weight: bold; color: white; }
         .game-nav, .sub-nav { display: flex; justify-content: center; gap: 10px; margin: 10px 0; flex-wrap: wrap; }
+        
         button { background: transparent; border: 1px solid var(--pm-gold); color: var(--pm-gold); padding: 10px 20px; cursor: pointer; transition: 0.3s; font-weight: bold; }
         button.active, button:hover { background: var(--pm-gold); color: black; box-shadow: 0 0 15px var(--pm-gold); }
-        .sub-nav button { border-color: #444; color: #888; font-size: 0.9em; }
+        .sub-nav button { border-color: #444; color: #888; font-size: 0.9em; padding: 6px 15px; }
         .sub-nav button.active { border-color: var(--pm-red); color: var(--pm-red); background: rgba(255, 60, 60, 0.1); }
 
-        /* 搜尋 */
-        .search-container { margin: 20px auto; max-width: 500px; padding: 0 20px; }
-        #search { width: 100%; padding: 12px; background: #111; border: 1px solid #444; color: white; border-radius: 4px; }
+        /* Search */
+        .search-container { margin: 20px auto; max-width: 600px; padding: 0 20px; }
+        #search { width: 100%; padding: 12px; background: #111; border: 1px solid #444; color: white; border-radius: 4px; font-family: monospace; }
 
-        /* 卡片網格 */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; padding: 40px; max-width: 1400px; margin: 0 auto; }
-        .card { background: var(--card-bg); border: 1px solid #333; transition: 0.3s; cursor: pointer; text-align: center; overflow: hidden; }
+        /* Grid */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; padding: 30px; max-width: 1400px; margin: 0 auto; }
+        .card { background: var(--card-bg); border: 1px solid #333; transition: 0.3s; cursor: pointer; text-align: center; overflow: hidden; position: relative; }
         .card:hover { border-color: var(--pm-gold); transform: translateY(-5px); }
         .img-box { width: 100%; aspect-ratio: 1/1.2; background: #000; border-bottom: 1px solid #333; overflow: hidden; }
-        .img-box img { width: 100%; height: 100%; object-fit: cover; }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.4s; }
+        .card:hover img { transform: scale(1.05); }
         .card-info { padding: 15px; }
-        .card-info small { color: var(--pm-red); font-weight: bold; }
-        .card-info h3 { margin: 5px 0 0; font-size: 1.1em; }
+        .card-info small { color: var(--pm-red); font-weight: bold; letter-spacing: 1px; display: block; margin-bottom: 5px; }
+        .card-info h3 { margin: 0; font-size: 1.1em; color: #fff; }
 
-        /* 彈窗 (Modal) */
-        .modal { display: none; position: fixed; z-index: 1000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); }
-        .modal-content { background: #111; width: 90%; max-width: 850px; margin: 5vh auto; border: 1px solid var(--pm-red); max-height: 85vh; overflow-y: auto; position: relative; }
+        /* Modal */
+        .modal { display: none; position: fixed; z-index: 1000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(5px); }
+        .modal-content { background: #111; width: 95%; max-width: 850px; margin: 4vh auto; border: 1px solid var(--pm-red); max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 0 30px rgba(255, 60, 60, 0.2); }
         .close { position: absolute; right: 20px; top: 15px; font-size: 35px; color: white; cursor: pointer; z-index: 10; }
-        .modal-header { display: flex; flex-wrap: wrap; gap: 30px; padding: 40px; background: #1a1a1a; }
-        #modalImg { width: 180px; border: 2px solid var(--pm-gold); }
-        .modal-tabs { display: flex; background: #000; border-bottom: 1px solid var(--pm-red); position: sticky; top: 0; }
-        .tab-btn { flex: 1; border: none; padding: 15px; color: #666; cursor: pointer; background: transparent; font-size: 1em; }
-        .tab-btn.active { color: var(--pm-red); border-bottom: 3px solid var(--pm-red); background: #111; font-weight: bold; }
-        .modal-body { padding: 40px; line-height: 1.8; font-size: 1.1em; white-space: pre-wrap; color: #ccc; }
+        .modal-header { display: flex; flex-wrap: wrap; gap: 30px; padding: 40px; background: #1a1a1a; border-bottom: 1px solid #333; }
+        #modalImg { width: 180px; border: 2px solid var(--pm-gold); box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
+        .header-info h2 { font-size: 2.2em; margin: 0; color: var(--pm-gold); }
+        
+        .modal-tabs { display: flex; background: #000; border-bottom: 1px solid var(--pm-red); position: sticky; top: 0; z-index: 5; }
+        .tab-btn { flex: 1; border: none; padding: 15px; color: #666; cursor: pointer; background: transparent; transition: 0.3s; font-size: 1em; font-weight: bold; }
+        .tab-btn.active { color: var(--pm-red); border-bottom: 3px solid var(--pm-red); background: #111; }
+        .modal-body { padding: 40px; line-height: 1.8; font-size: 1.1em; white-space: pre-wrap; color: #ccc; animation: fadeIn 0.3s; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -57,7 +61,7 @@
     </div>
     <div id="subnav" class="sub-nav"></div>
     <div class="search-container">
-        <input type="text" id="search" placeholder="> 搜尋檔案..." oninput="render()">
+        <input type="text" id="search" placeholder="> 檢索關鍵字（名稱/標號）..." oninput="render()">
     </div>
 </header>
 
@@ -67,23 +71,25 @@
     <div class="modal-content">
         <span class="close" onclick="closeM()">&times;</span>
         <div class="modal-header">
-            <img id="modalImg" src="">
+            <img id="modalImg" src="" alt="Portrait">
             <div class="header-info">
-                <h2 id="modalTitle" style="color: var(--pm-gold); font-size: 2.5em; margin: 0;"></h2>
+                <h2 id="modalTitle"></h2>
                 <p id="modalTag" style="color: var(--pm-red); font-weight: bold; margin-top: 10px;"></p>
             </div>
         </div>
         <div class="modal-tabs">
-            <button class="tab-btn active" onclick="setT('intro', this)">檔案介紹</button>
-            <button class="tab-btn" onclick="setT('bg', this)">背景故事</button>
-            <button class="tab-btn" onclick="setT('chap', this)">章節故事</button>
+            <button class="tab-btn active" onclick="setT('intro', this)">簡介</button>
+            <button class="tab-btn" onclick="setT('bg', this)">背景檔案</button>
+            <button class="tab-btn" onclick="setT('story', this)">章節紀錄</button>
         </div>
         <div id="modalBody" class="modal-body"></div>
     </div>
 </div>
 
 <script>
-// --- 絕對正確的資料庫 (手動提取 Wiki 連結) ---
+/**
+ * 完整資料庫：手動校對 Wiki 網址與故事分段
+ */
 const DB = {
     "Limbus": {
         "cats": {
@@ -91,63 +97,74 @@ const DB = {
                 { 
                     name: "Don Quixote 唐吉訶德", tag: "No. 03", 
                     img: "https://static.wikia.nocookie.net/lobotomycorp/images/0/08/Don_Quixote_Portrait.png",
-                    intro: "邊獄公司 3 號收割者。一名極度崇拜「正義」與收割者的狂熱少女。",
-                    bg: "身穿布滿收割者周邊的服裝，隨時保持著極端高昂的情緒。雖然表現得像個瘋子，但其對正義的偏執背後隱藏著巨大的秘密。",
-                    chap: "【第七章：夢的終點】\n真相揭曉：她是第二代血魔，曾試圖建立一個人類與血魔共存的「夢幻樂園」。最終在那場名為夢的終點中，她被迫直面現實的寒冷。"
+                    intro: "邊獄公司第 3 號收割者。一名極度崇拜「收割者」的正義狂熱者。",
+                    bg: "身穿布滿收割者周邊的服裝，隨時保持著極端高昂的情緒。這種熱情在他人眼中更像是某種認知的錯位或強烈的自我暗示。",
+                    story: "【第七章：夢的終點】\n真相揭曉：她曾是第二代血魔。她試圖建立一個人類與血魔共存的「夢幻樂園」。在那場名為夢的終點中，她被迫直面現實的寒冷，以及那份被深埋的、關於守護的最初心願。"
                 },
                 { 
                     name: "Yi Sang 易桑", tag: "No. 01", 
                     img: "https://static.wikia.nocookie.net/lobotomycorp/images/a/a2/Yi_Sang_Portrait.png",
-                    intro: "前天才研究員「九人會」成員，鏡像技術的發明者。",
-                    bg: "在同伴分散、理想破碎後，他陷入了漫長的虛無與沉寂。加入邊獄公司是為了尋找他失落的翅膀。",
-                    chap: "【第四章：不變之物】\n他在雨中與曾經的理想對質。最終明白理想即便會受損，飛翔的意志依然是永恆的。"
+                    intro: "曾是天才研究員「九人會」的一員。鏡像技術的創造者。",
+                    bg: "在同伴分散、理想破碎後，他陷入了漫長的虛無與消沉。他的沉默並非無言，而是對破碎現狀的一種無力觀察。",
+                    story: "【第四章：不變之物】\n他在雨中與曾經的理想對質。最終明白理想雖然會受損，但「飛翔」的意志是永恆不變的。他重新拾起了屬於自己的翅膀。"
                 },
-                { name: "Faust 浮士德", tag: "No. 02", img: "https://static.wikia.nocookie.net/lobotomycorp/images/d/d4/Faust_Portrait.png", intro: "邊獄公司技術核心。", bg: "全知全能的天才。", chap: "掌握所有都市秘密的鑰匙。" }
-            ]},
-            "stages": { "label": "關鍵關卡", "items": [
-                { name: "P-Corp 遊樂園", tag: "Chapter 7", img: "https://static.wikia.nocookie.net/lobotomycorp/images/c/c5/Angela_Portrait.png", intro: "第七章主要場景。", bg: "血魔與夢想交織的樂園。", chap: "夢想破滅的終點站。" }
+                { name: "Faust 浮士德", tag: "No. 02", img: "https://static.wikia.nocookie.net/lobotomycorp/images/d/d4/Faust_Portrait.png", intro: "邊獄公司的技術核心。", bg: "全知全能的天才。", story: "梅菲斯特號的開發者，掌握著所有不可說的知識。" },
+                { name: "Heathcliff 希斯克里夫", tag: "No. 07", img: "https://static.wikia.nocookie.net/lobotomycorp/images/6/61/Heathcliff_Portrait.png", intro: "充滿憤怒的戰鬥員。", bg: "來自呼嘯山莊的遺棄者。", story: "【第六章：心碎】在痛苦的輪迴中，他試圖砸碎那面映照出悲劇的鏡子。" }
             ]}
         }
     },
     "Ruina": {
         "cats": {
-            "librarians": { "label": "各層總司書", "items": [
+            "librarians": { "label": "圖書館司書", "items": [
                 { 
                     name: "Roland 羅蘭", tag: "總類層指定司書", 
                     img: "https://static.wikia.nocookie.net/lobotomycorp/images/9/9d/Roland_Portrait.png",
-                    intro: "圖書館中唯一的人類司書，身穿黑色西裝的九階收割者。",
-                    bg: "在失去摯愛的妻子後血洗都市。為了復仇進入圖書館，卻在與安吉拉的相處中產生了複雜的情感。",
-                    chap: "【結局：再見，我的苦痛】\n羅蘭最終選擇了寬恕。他將安吉拉從永恆的循環中拉了出來，即便這意味著圖書館將迎來終結。"
+                    intro: "身穿黑色西裝的九階收割者，圖書館中唯一的「人類」。",
+                    bg: "在失去摯愛的妻子後血洗都市。為了復仇進入圖書館，卻在與安吉拉的相處中產生了複雜的情感糾葛。",
+                    story: "【結局：再見，我的苦痛】\n羅蘭最終選擇了寬恕。他將安吉拉從永恆的循環中拉了出來，即便這意味著圖書館將迎來終結。他從面具下走了出來。"
                 },
-                { name: "Gebura 潔布拉", tag: "語言層總司書", img: "https://static.wikia.nocookie.net/lobotomycorp/images/c/c4/Gebura_Portrait.png", intro: "傳說中的「紅霧」。", bg: " Kali，為了守護同伴而戰死。", chap: "在圖書館中以戰鬥指導者的身份守護著大家。" }
+                { name: "Gebura 潔布拉", tag: "語言層總司書", img: "https://static.wikia.nocookie.net/lobotomycorp/images/c/c4/Gebura_Portrait.png", intro: "傳說中的「紅霧」。", bg: " Kali，前懲戒部主管。", story: "在圖書館中以戰鬥指導者的身份守護著大家。她的重劍依然沉重且堅定。" }
             ]}
         }
     },
     "Lobotomy": {
         "cats": {
-            "founders": { "label": "創始者與 AI", "items": [
+            "founders": { "label": "創始者 (Founders)", "items": [
                 { 
                     name: "Ayin 艾因", tag: "A", 
                     img: "https://static.wikia.nocookie.net/lobotomycorp/images/0/05/Ayin_Portrait.png",
-                    intro: "腦葉公司的創始人。",
-                    bg: "為了完成卡門的願望，他在無限的循環中折磨自己與同伴，只為播下希望的種子。",
-                    chap: "【第 50 天】\n他化作光芒灑向都市，完成了漫長的贖罪。"
+                    intro: "腦葉公司的創辦人，一切計畫的起點。",
+                    bg: "為了完成卡門的遺願，他在無限的循環中折磨自己與同伴。這種行為與其說是執著，不如說是對罪惡的一種病態償還。",
+                    story: "【第 50 天：歸途】\n他在最後一刻化作了光芒，將希望灑向都市。在光的另一頭，他是否見到了最初的夢想，這僅僅是觀察者的猜測。"
                 },
-                { name: "Carmen 卡門", tag: "C", img: "https://static.wikia.nocookie.net/lobotomycorp/images/6/6b/Carmen_Portrait.png", intro: "計畫的靈魂人物。", bg: "最初的帶領者。", chap: "即便死後，她的思想仍影響著整個世界。" }
+                { 
+                    name: "Carmen 卡門", tag: "C", 
+                    img: "https://static.wikia.nocookie.net/lobotomycorp/images/6/6b/Carmen_Portrait.png",
+                    intro: "計畫的靈魂與最初的倡議者。",
+                    bg: "她曾試圖治療都市的集體心理疾病，但最終死於實驗。她的死成為了艾因行動的唯一動力。",
+                    story: "即便死後，她的思想仍像幽靈一樣纏繞在「光」之中，引導著不同的人走向不同的終局。"
+                },
+                { 
+                    name: "Angela 安吉拉", tag: "AI / Founder", 
+                    img: "https://static.wikia.nocookie.net/lobotomycorp/images/c/c5/Angela_Portrait.png",
+                    intro: "腦葉公司的秘書 AI，也是圖書館的建立者。",
+                    bg: "被賦予了人類的情感卻被困在百萬年的循環中。這種矛盾的設定導致了她最終的背叛與覺醒。",
+                    story: "從機器到人類，她跨越了最漫長的距離。在圖書館的終點，她終於學會了為自己而呼吸。"
+                }
             ]},
             "abnormalities": { "label": "異想體", "items": [
-                { name: "一無所有", tag: "ALEPH", img: "https://static.wikia.nocookie.net/lobotomycorp/images/b/bb/Nothing_There_Icon.png", intro: "極度危險的擬態異想體。", bg: "渴望人類的外殼。", chap: "「你好」、「我愛你」——它模仿著這些詞彙，同時將員工撕碎。" }
+                { name: "一無所有", tag: "ALEPH", img: "https://static.wikia.nocookie.net/lobotomycorp/images/b/bb/Nothing_There_Icon.png", intro: "擬態異想體。", bg: "渴望人類的外殼與愛。", story: "「你好」、「我愛你」——它模仿著這些溫馨的詞彙，同時用鐮刀將員工肢解。" }
             ]}
         }
     }
 };
 
-let CG = 'Limbus';
-let CC = 'sinners';
-let CI = null;
+let activeG = 'Limbus';
+let activeC = 'sinners';
+let activeI = null;
 
 function switchG(gid, btn) {
-    CG = gid;
+    activeG = gid;
     document.querySelectorAll('.g-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
 
@@ -160,12 +177,12 @@ function switchG(gid, btn) {
         const b = document.createElement('button');
         b.innerText = cats[k].label;
         b.onclick = () => {
-            CC = k;
+            activeC = k;
             document.querySelectorAll('.sub-nav button').forEach(sb => sb.classList.remove('active'));
             b.classList.add('active');
             render();
         };
-        if(i === 0) { b.classList.add('active'); CC = k; }
+        if(i === 0) { b.classList.add('active'); activeC = k; }
         sub.appendChild(b);
     });
     render();
@@ -175,15 +192,15 @@ function render() {
     const grid = document.getElementById('dataGrid');
     grid.innerHTML = '';
     const q = document.getElementById('search').value.toLowerCase();
-    const items = DB[CG].cats[CC].items;
+    const items = DB[activeG].cats[activeC].items;
 
     items.forEach(item => {
-        if(item.name.toLowerCase().includes(q)) {
+        if(item.name.toLowerCase().includes(q) || item.tag.toLowerCase().includes(q)) {
             const card = document.createElement('div');
             card.className = 'card';
             card.onclick = () => openM(item);
             card.innerHTML = `
-                <div class="img-box"><img src="${item.img}"></div>
+                <div class="img-box"><img src="${item.img}" loading="lazy"></div>
                 <div class="card-info"><small>${item.tag}</small><h3>${item.name}</h3></div>
             `;
             grid.appendChild(card);
@@ -192,7 +209,7 @@ function render() {
 }
 
 function openM(item) {
-    CI = item;
+    activeI = item;
     document.getElementById('modalTitle').innerText = item.name;
     document.getElementById('modalTag').innerText = item.tag;
     document.getElementById('modalImg').src = item.img;
@@ -206,13 +223,15 @@ function setT(type, btn) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     const body = document.getElementById('modalBody');
-    if(type === 'intro') body.innerText = CI.intro;
-    else if(type === 'bg') body.innerText = CI.bg;
-    else body.innerText = CI.chap;
+    if(type === 'intro') body.innerText = activeI.intro;
+    else if(type === 'bg') body.innerText = activeI.bg;
+    else body.innerText = activeI.story;
 }
 
+// 初始化與視窗點擊關閉
 window.onload = () => switchG('Limbus', document.querySelector('.g-btn'));
 window.onclick = (e) => { if(e.target.className === 'modal') closeM(); }
 </script>
+
 </body>
 </html>
