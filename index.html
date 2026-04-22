@@ -548,14 +548,14 @@
       </div>
     </div>
 
-    <div class="footer-note">GitHub Pages compatible · single-file build · no dependency required</div>
+    <div class="footer-note">GitHub Pages compatible · local assets build · place images in /assets/img/*</div>
   </div>
 
   <script>
-    const WIKI = {
-      Limbus: "https://limbuscompany.wiki.gg/wiki/Special:FilePath/",
-      Ruina: "https://libraryofruina.wiki.gg/wiki/Special:FilePath/",
-      Lobotomy: "https://lobotomycorp.wiki.gg/wiki/Special:FilePath/"
+    const LOCAL = {
+      Limbus: "assets/img/limbus/",
+      Ruina: "assets/img/ruina/",
+      Lobotomy: "assets/img/lcorp/"
     };
 
     const DB = {
@@ -660,9 +660,9 @@
     }
 
     function getCandidates(item) {
-      const wikiRoot = WIKI[state.game];
+      const root = LOCAL[state.game];
       const normalized = item.files || [];
-      return normalized.map(f => wikiRoot + encodeURIComponent(f));
+      return normalized.map(function(f){ return root + f.split(" ").join("_").split("'").join(""); });
     }
 
     function attachFallback(imgEl, item) {
