@@ -3,288 +3,204 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="referrer" content="no-referrer" />
   <title>PROJECT MOON ARCHIVE | 專案太陽檔案</title>
   <style>
     :root {
-      --pm-bg: #090909;
-      --pm-bg-2: #111111;
+      --pm-bg: #0a0a0a;
       --pm-card: #151515;
-      --pm-card-2: #1b1b1b;
-      --pm-text: #e7e7e7;
-      --pm-muted: #a7a7a7;
-      --pm-red: #ff3b3b;
-      --pm-red-soft: rgba(255, 59, 59, 0.12);
+      --pm-red: #ff3c3c;
       --pm-gold: #d4af37;
-      --pm-border: #2e2e2e;
-      --pm-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
-      --radius: 16px;
-      --radius-sm: 10px;
-      --max: 1400px;
+      --radius: 12px;
+      --text: #e7e7e7;
     }
+    body { background: var(--pm-bg); color: var(--text); margin: 0; font-family: "Segoe UI", "Microsoft JhengHei", sans-serif; overflow-x: hidden; }
+    
+    /* 標頭 & 導航 */
+    header { background: #000; padding: 25px; border-bottom: 2px solid var(--pm-red); text-align: center; position: sticky; top: 0; z-index: 100; }
+    .logo { font-size: 2rem; letter-spacing: 5px; color: white; margin-bottom: 20px; font-weight: bold; text-transform: uppercase; }
+    .game-nav, .sub-nav { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 15px; }
+    button { border: 1px solid var(--pm-gold); background: transparent; color: var(--pm-gold); padding: 8px 16px; cursor: pointer; transition: 0.3s; font-weight: bold; }
+    button.active, button:hover { background: var(--pm-gold); color: black; box-shadow: 0 0 10px rgba(212,175,55,0.3); }
+    .sub-nav button { border-color: #333; color: #888; }
+    .sub-nav button.active { border-color: var(--pm-red); color: var(--pm-red); background: rgba(255,59,59,0.1); }
 
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      background:
-        radial-gradient(circle at top, rgba(255, 59, 59, 0.09), transparent 28%),
-        linear-gradient(180deg, #0b0b0b 0%, #070707 100%);
-      color: var(--pm-text);
-      font-family: "Segoe UI", "Microsoft JhengHei", system-ui, sans-serif;
-      overflow-x: hidden;
-    }
-
-    /* 背景掃描線特效 */
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0.05;
-      background-image: linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px);
-      background-size: 100% 4px;
-      z-index: 1;
-    }
-
-    .app { position: relative; z-index: 2; min-height: 100vh; }
-
-    /* Loading 畫面 */
-    .loading {
-      position: fixed; inset: 0; z-index: 9999;
-      display: grid; place-items: center;
-      background: radial-gradient(circle at center, rgba(255, 59, 59, 0.14), transparent 40%), #050505;
-      transition: opacity .45s ease, visibility .45s ease;
-    }
-    .loading.hide { opacity: 0; visibility: hidden; }
-    .loading-card {
-      width: min(92vw, 520px); border: 1px solid rgba(212, 175, 55, 0.45); border-radius: 22px;
-      background: linear-gradient(180deg, rgba(22,22,22,0.96), rgba(8,8,8,0.96));
-      padding: 28px; text-align: center; position: relative; overflow: hidden;
-    }
-    .loading-title { font-size: 2.6rem; letter-spacing: 0.22em; color: #fff; text-shadow: 0 0 18px rgba(255,59,59,0.35); margin: 0; }
-    .scanbar { height: 10px; background: #0e0e0e; border: 1px solid #333; border-radius: 999px; overflow: hidden; margin-top: 18px; position: relative; }
-    .scanbar span { display: block; height: 100%; width: 35%; background: linear-gradient(90deg, transparent, var(--pm-red), var(--pm-gold), transparent); animation: load 1.3s ease-in-out infinite; }
-    @keyframes load { 0% { transform: translateX(-120%); } 100% { transform: translateX(320%); } }
-
-    /* Header & Nav */
-    header { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); background: rgba(10, 10, 10, 0.92); border-bottom: 1px solid rgba(255, 59, 59, 0.55); }
-    .header-inner { max-width: var(--max); margin: 0 auto; padding: 22px 18px; }
-    .logo { font-size: 1.8rem; letter-spacing: 0.22em; font-weight: 800; color: #fff; text-transform: uppercase; text-align: center; margin-bottom: 15px; }
-    .game-nav, .sub-nav { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 12px; }
-
-    button {
-      border: 1px solid var(--pm-gold); background: transparent; color: var(--pm-gold);
-      padding: 10px 18px; border-radius: 999px; cursor: pointer; font-weight: 700; transition: all .2s;
-    }
-    button.active { background: var(--pm-gold); color: #0a0a0a; box-shadow: 0 0 15px rgba(212,175,55,0.4); }
-    .sub-nav button { border-color: #333; color: #9c9c9c; }
-    .sub-nav button.active { border-color: var(--pm-red); color: var(--pm-red); background: var(--pm-red-soft); }
-
-    /* Grid & Cards */
-    .grid { max-width: var(--max); margin: 0 auto; padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
-    .card { background: var(--pm-card); border: 1px solid var(--pm-border); border-radius: var(--radius); overflow: hidden; cursor: pointer; transition: 0.3s; }
+    /* 網格與卡片 */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 20px; padding: 30px; max-width: 1400px; margin: 0 auto; }
+    .card { background: var(--pm-card); border: 1px solid #333; border-radius: var(--radius); overflow: hidden; cursor: pointer; transition: 0.3s; text-align: center; }
     .card:hover { transform: translateY(-5px); border-color: var(--pm-gold); }
-    .img-box { width: 100%; aspect-ratio: 1/1.2; background: #000; overflow: hidden; }
-    .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
-    .card-info { padding: 15px; text-align: center; }
-    .card-info h3 { margin: 5px 0; font-size: 1.1rem; }
+    .img-box { width: 100%; aspect-ratio: 1/1.2; background: #000; overflow: hidden; border-bottom: 1px solid #222; }
+    .card-info { padding: 12px; }
+    .card-info h3 { margin: 5px 0 0; font-size: 1rem; color: #fff; }
     .card-info small { color: var(--pm-red); font-family: monospace; }
 
-    /* Modal */
-    .modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); }
-    .modal.open { display: flex; align-items: center; justify-content: center; }
-    .modal-content { width: 90%; max-width: 800px; background: #0f0f0f; border: 1px solid var(--pm-red); border-radius: 20px; overflow: hidden; position: relative; }
-    .close { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; color: #fff; z-index: 10; }
-    .modal-header { display: flex; padding: 30px; gap: 25px; background: #151515; border-bottom: 1px solid #222; }
-    #modalImg { width: 150px; border-radius: 10px; border: 1px solid var(--pm-gold); }
-    .modal-tabs { display: flex; background: #0a0a0a; }
+    /* Modal 彈窗 */
+    .modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.3s; }
+    .modal.open { opacity: 1; visibility: visible; }
+    .modal-content { width: 90%; max-width: 800px; background: #111; border: 1px solid var(--pm-red); border-radius: 16px; position: relative; max-height: 90vh; overflow-y: auto; }
+    .close { position: absolute; top: 10px; right: 15px; font-size: 30px; cursor: pointer; color: white; z-index: 10; }
+    .modal-header { display: flex; padding: 30px; gap: 20px; background: #1a1a1a; border-bottom: 1px solid #333; }
     .tab-btn { flex: 1; padding: 15px; border: none; background: none; color: #666; cursor: pointer; border-bottom: 2px solid transparent; }
     .tab-btn.active { color: var(--pm-red); border-bottom-color: var(--pm-red); background: #111; }
-    .modal-body { padding: 30px; line-height: 1.8; color: #ccc; white-space: pre-wrap; height: 300px; overflow-y: auto; }
+    .modal-body { padding: 30px; line-height: 1.8; color: #ccc; white-space: pre-wrap; }
   </style>
 </head>
 <body>
 
-  <div id="loading" class="loading">
-    <div class="loading-card">
-      <h1 class="loading-title">PROJECT MOON ARCHIVE</h1>
-      <div class="scanbar"><span></span></div>
-    </div>
-  </div>
+  <header>
+    <div class="logo">PROJECT MOON ARCHIVE</div>
+    <div class="game-nav" id="gameNav"></div>
+    <div class="sub-nav" id="subnav"></div>
+  </header>
 
-  <div class="app">
-    <header>
-      <div class="header-inner">
-        <div class="logo">PROJECT MOON ARCHIVE</div>
-        <div class="game-nav" id="gameNav"></div>
-        <div class="sub-nav" id="subnav"></div>
-      </div>
-    </header>
+  <main id="dataGrid" class="grid"></main>
 
-    <main id="dataGrid" class="grid"></main>
-
-    <div id="detailModal" class="modal">
-      <div class="modal-content">
-        <span class="close" onclick="closeM()">&times;</span>
-        <div class="modal-header">
-          <img id="modalImg" src="" />
-          <div class="header-info">
-            <h2 id="modalTitle" style="color:var(--pm-gold); margin:0;"></h2>
-            <p id="modalTag" style="color:var(--pm-red); font-family:monospace; margin:10px 0;"></p>
-          </div>
+  <div id="detailModal" class="modal" onclick="if(event.target==this)closeM()">
+    <div class="modal-content">
+      <span class="close" onclick="closeM()">&times;</span>
+      <div class="modal-header">
+        <div id="modalPlaceholder"></div>
+        <div class="header-info">
+          <h2 id="modalTitle" style="color:var(--pm-gold); margin:0;"></h2>
+          <p id="modalTag" style="color:var(--pm-red); font-family:monospace; margin:5px 0;"></p>
         </div>
-        <div class="modal-tabs">
-          <button class="tab-btn active" onclick="setT('intro', this)">檔案介紹</button>
-          <button class="tab-btn" onclick="setT('bg', this)">背景故事</button>
-          <button class="tab-btn" onclick="setT('story', this)">章節紀錄</button>
-        </div>
-        <div id="modalBody" class="modal-body"></div>
       </div>
+      <div style="display:flex;">
+        <button class="tab-btn active" onclick="setT('intro', this)">簡介</button>
+        <button class="tab-btn" onclick="setT('bg', this)">背景故事</button>
+        <button class="tab-btn" onclick="setT('story', this)">章節紀錄</button>
+      </div>
+      <div id="modalBody" class="modal-body"></div>
     </div>
   </div>
 
   <script>
-    const LOCAL = {
-      Limbus: "assets/img/limbus/",
-      Ruina: "assets/img/ruina/",
-      Lobotomy: "assets/img/lcorp/"
-    };
+    // --- 萬能占位符系統 ---
+    function getPlaceholder(name) {
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="360"><rect width="100%" height="100%" fill="#0a0a0a"/><rect x="10" y="10" width="280" height="340" fill="none" stroke="#d4af37" stroke-width="2"/><text x="50%" y="50%" fill="#d4af37" font-family="Arial" font-size="24" text-anchor="middle">${name}</text><text x="50%" y="60%" fill="#ff3b3b" font-family="monospace" font-size="12" text-anchor="middle">ARCHIVE_ENCRYPTED</text></svg>`;
+      return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+    }
 
     const DB = {
       Limbus: {
         cats: {
+          core: { label: "核心人員", items: [
+            { id: "D", name: "Dante 但丁", tag: "Manager / LCB", intro: "邊獄公司的管理者，也是多項認知技術的載體。", bg: "以時鐘作為其具象化的認知介面。", story: "在循環中與罪人建立共感。" },
+            { id: "V", name: "Vergilius 維吉里烏斯", tag: "Guide / LCB", intro: "Limbus Company 的引導者。", bg: "曾被稱為最不穩定的收割者之一。", story: "以冷徹的理性監控著計畫。" }
+          ]},
           sinners: { label: "12 罪人", items: [
-            { name: "Yi Sang 易桑", tag: "No. 01", files: ["Yi Sang Portrait.png"], intro: "前天才研究員。", bg: "他在破碎的理想中，試圖觀測不存在的羽翼。", story: "第四章聚焦其價值觀的重整。" },
-            { name: "Faust 浮士德", tag: "No. 02", files: ["Faust Portrait.png"], intro: "自稱最接近全知的天才。", bg: "其言語克制，對結論的渴求近乎偏執。", story: "身為解說者引導著巴士的前進。" },
-            { name: "Don Quixote 唐吉訶德", tag: "No. 03", files: ["Don Quixote Portrait.png"], intro: "熱衷正義的少女。", bg: "言行充滿俠義感，背後藏著極深的執念。", story: "第七章直面其血色本質。" }
+            { id: "01", name: "Yi Sang 易桑", tag: "No. 01 / LCB", intro: "前天才研究員。", bg: "在破碎中觀測理想。", story: "第四章明白『飛翔』的不變意志。" },
+            { id: "02", name: "Faust 浮士德", tag: "No. 02 / LCB", intro: "全知全能的天才。", bg: "掌握都市秘密的核心。", story: "待檢索。" },
+            { id: "03", name: "Don Quixote 唐吉訶德", tag: "No. 03 / LCB", intro: "熱衷正義的少女。", bg: "其熱忱背後是認知的錯位。", story: "第七章直面『夢的終點』。" },
+            { id: "04", name: "Ryoshu 龍州", tag: "No. 04 / LCB", intro: "極致的藝術家。", bg: "以刀刃作畫。", story: "待檢索。" },
+            { id: "05", name: "Meursault 梅爾索", tag: "No. 05 / LCB", intro: "理性執行者。", bg: "遵循程序與指令。", story: "待檢索。" },
+            { id: "06", name: "Hong Lu 洪路", tag: "No. 06 / LCB", intro: "天真的大少爺。", bg: "家族背景複雜。", story: "待檢索。" },
+            { id: "07", name: "Heathcliff 希斯克里夫", tag: "No. 07 / LCB", intro: "暴躁的戰鬥員。", bg: "呼嘯山莊的悲劇。", story: "第六章是其核心故事。" },
+            { id: "08", name: "Ishmael 以實瑪利", tag: "No. 08 / LCB", intro: "前海員。", bg: "追逐著那頭白鯨。", story: "第五章是其核心故事。" },
+            { id: "09", name: "Rodion 羅德昂", tag: "No. 09 / LCB", intro: "熱情的豪放女子。", bg: "罪與罰的回憶糾纏。", story: "待檢索。" },
+            { id: "10", name: "Sinclair 辛克萊", tag: "No. 10 / LCB", intro: "懦弱但潛力巨大的少年。", bg: "家庭被屠殺的創傷。", story: "第三章核心人物。" },
+            { id: "11", name: "Outis 奧緹斯", tag: "No. 11 / LCB", intro: "幹練的軍官。", bg: "極度忠誠且効率。", story: "待檢索。" },
+            { id: "12", name: "Gregor 葛列格爾", tag: "No. 12 / LCB", intro: "老兵。", bg: "手臂異變為蟲。", story: "第一章核心人物。" }
           ]}
         }
       },
       Ruina: {
         cats: {
-          librarians: { label: "司書", items: [
-            { name: "Roland 羅蘭", tag: "總類層", files: ["Roland Portrait.png"], intro: "隱藏在面具下的觀察者。", bg: "以復仇為名，在都市中尋求解脫。", story: "與 Angela 完成了終局的和解。" }
+          librarians: { label: "總司書", items: [
+            { id: "Roland", name: "Roland 羅蘭", tag: "總類層", intro: "黑色沉默的男人。", bg: "在都市中製造了無數血案的人類。", story: "最終選擇寬恕安吉拉。" },
+            { id: "Angela", name: "Angela 安吉拉", tag: "館長", intro: "圖書館的管理者。", bg: "在百萬年數據中產生了自由的推測。", story: "結局時將光播灑向都市。" },
+            { id: "Gebura", name: "Gebura 潔布拉", tag: "語言層", intro: "傳說中的紅霧。", bg: "前懲戒部主管，力量的具象化。", story: "在圖書館找回了戰鬥的初衷。" }
+          ]},
+          enemies: { label: "都市敵人", items: [
+            { id: "Argalia", name: "Argalia 阿爾加利亞", tag: "漆黑沉默", intro: "扭曲的劍客。", bg: "以音樂作為其殺戮的美學。", story: "終焉演奏會的指揮者。" }
           ]}
         }
       },
       Lobotomy: {
         cats: {
-          founders: { label: "創始者", items: [
-            { name: "Ayin 艾因", tag: "A", files: ["Ayin Portrait.png"], intro: "計畫執行者。", bg: "在無限循環中推測成功的機率。", story: "最終成為了觀測者眼中的光。" },
-            { name: "Angela 安吉拉", tag: "AI", files: ["Angela Portrait.png"], intro: "被賦予認知的機器。", bg: "在百萬年數據中產生了自由的推測。", story: "親手建立並拆解了圖書館。" }
+          founders: { label: "創始者與 AI", items: [
+            { id: "Ayin", name: "Ayin 艾因", tag: "A", intro: "腦葉公司的奠基人。", bg: "計畫推動者，將自我完全耗盡。", story: "第 50 天歸途。" },
+            { id: "Carmen", name: "Carmen 卡門", tag: "C", intro: "最初的理想與計畫起源。", bg: "死於對集體認知的早期實驗。", story: "化作光之幽靈，引導著扭曲。" },
+            { id: "Angela", name: "Angela 安吉拉", tag: "AI / Founder", intro: "公司的秘書 AI。", bg: "在漫長循環中覺醒的機器意志。", story: "從被設計的工具轉化為選擇者。" }
+          ]},
+          sephirah: { label: "部門主管", items: [
+            { id: "Malkuth", name: "Malkuth", tag: "控制部主管", intro: "第一部門Sephirah。", bg: "情緒豐富且講究效率。", story: "代表控制與壓制。" },
+            { id: "Yesod", name: "Yesod", tag: "情報部主管", intro: "規則導向管理者。", bg: "注重系統效率與結構。", story: "將流程極大化。" },
+            { id: "Hod", name: "Hod", tag: "培訓部主管", intro: "善於理解與照顧他人。", bg: "為情感與秩序提供緩衝。", story: "在修復中尋求自我確認。" },
+            { id: "Binah", name: "Binah", tag: "研發部主管", intro: "冷冽且接近真相。", bg: "掌握了最深層的認知機密。", story: "待檢索。" }
+          ]},
+          abnormalities: { label: "異想體", items: [
+            { id: "Nothing There", name: "一無所有", tag: "ALEPH", intro: "擬態異想體。", bg: "渴望人類的外殼與愛。", story: "「你好」——它重複著這句話，尋找下一個外殼。" }
           ]}
         }
       }
     };
 
-    let state = { game: "Limbus", cat: "sinners", item: null };
+    let activeG = 'Limbus', activeC = 'core', activeI = null;
 
-    // --- 核心圖片找尋系統 ---
-    function makeDataUriPlaceholder(name) {
-      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="360"><rect width="100%" height="100%" fill="#0a0a0a"/><rect x="10" y="10" width="280" height="340" fill="none" stroke="#d4af37" stroke-width="2"/><text x="50%" y="50%" fill="#d4af37" font-family="Arial" font-size="24" text-anchor="middle">${name}</text><text x="50%" y="60%" fill="#ff3b3b" font-family="monospace" font-size="12" text-anchor="middle">ARCHIVE_MISSING</text></svg>`;
-      return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+    function switchG(gid, btn) {
+      activeG = gid;
+      activeC = Object.keys(DB[gid].cats)[0]; // 預設第一個子分類
+      renderGameNav();
+      renderSubNav();
+      renderGrid();
     }
 
-    function attachFallback(imgEl, item) {
-      const fileName = item.files[0].replace(/ /g, "_");
-      const localPath = `${LOCAL[state.game]}${fileName}`;
-      const wikiUrl = state.game === "Lobotomy" 
-        ? null // Fandom 會擋連線
-        : `https://${state.game.toLowerCase()}company.wiki.gg/images/${fileName}`;
-
-      const placeholder = makeDataUriPlaceholder(item.name);
-
-      // 步驟 1：先嘗試本地
-      imgEl.src = localPath;
-
-      imgEl.onerror = () => {
-        // 步驟 2：本地失敗，嘗試 Wiki.gg (如果是 Limbus/Ruina)
-        if (wikiUrl) {
-          imgEl.onerror = () => {
-            imgEl.onerror = null;
-            imgEl.src = placeholder; // 步驟 3：全都失敗，用 SVG
-          };
-          imgEl.src = wikiUrl;
-        } else {
-          imgEl.onerror = null;
-          imgEl.src = placeholder;
-        }
-      };
-    }
-
-    // --- UI 渲染邏輯 ---
-    function switchGame(g) {
-      state.game = g;
-      state.cat = Object.keys(DB[g].cats)[0];
-      renderNav();
-      render();
-    }
-
-    function renderNav() {
+    function renderGameNav() {
       const gNav = document.getElementById("gameNav");
       gNav.innerHTML = "";
       ["Limbus", "Ruina", "Lobotomy"].forEach(g => {
         const btn = document.createElement("button");
         btn.innerText = g.toUpperCase();
-        if(state.game === g) btn.className = "active";
-        btn.onclick = () => switchGame(g);
+        if(activeG === g) btn.classList.add("active");
+        btn.onclick = () => switchG(g, btn);
         gNav.appendChild(btn);
       });
+    }
 
+    function renderSubNav() {
       const sNav = document.getElementById("subnav");
       sNav.innerHTML = "";
-      Object.keys(DB[state.game].cats).forEach(c => {
+      Object.keys(DB[activeG].cats).forEach(cat => {
         const btn = document.createElement("button");
-        btn.innerText = DB[state.game].cats[c].label;
-        if(state.cat === c) btn.className = "active";
-        btn.onclick = () => { state.cat = c; renderNav(); render(); };
+        btn.innerText = DB[activeG].cats[cat].label;
+        if(activeC === cat) btn.classList.add("active");
+        btn.onclick = () => { activeC = cat; renderSubNav(); renderGrid(); };
         sNav.appendChild(btn);
       });
     }
 
-    function render() {
+    function renderGrid() {
       const grid = document.getElementById("dataGrid");
       grid.innerHTML = "";
-      DB[state.game].cats[state.cat].items.forEach(item => {
+      DB[activeG].cats[activeC].items.forEach(item => {
         const card = document.createElement("div");
         card.className = "card";
-        card.onclick = () => openModal(item);
-        
-        const img = document.createElement("img");
-        attachFallback(img, item);
-
-        card.innerHTML = `<div class="img-box"></div><div class="card-info"><small>${item.tag}</small><h3>${item.name}</h3></div>`;
-        card.querySelector(".img-box").appendChild(img);
+        card.onclick = () => openM(item);
+        const svg = getPlaceholder(item.name.split(' ')[0]); // 只取名字第一個字
+        card.innerHTML = `<div class="img-box"><img src="${svg}"></div><div class="card-info"><small>${item.tag}</small><h3>${item.name}</h3></div>`;
         grid.appendChild(card);
       });
     }
 
-    function openModal(item) {
-      state.item = item;
+    function openM(item) {
+      activeI = item;
       document.getElementById("modalTitle").innerText = item.name;
       document.getElementById("modalTag").innerText = item.tag;
-      attachFallback(document.getElementById("modalImg"), item);
-      setT('intro', document.querySelector(".tab-btn"));
+      document.getElementById("modalPlaceholder").innerHTML = `<img src="${getPlaceholder(item.name.split(' ')[0])}" style="width:120px; border:2px solid var(--pm-gold);">`;
+      setT('intro', document.querySelector(".tab-btn")); // 預設切換到「簡介」
       document.getElementById("detailModal").classList.add("open");
       document.body.style.overflow = "hidden";
     }
 
-    function closeM() {
-      document.getElementById("detailModal").classList.remove("open");
-      document.body.style.overflow = "";
-    }
+    function closeM() { document.getElementById("detailModal").classList.remove("open"); document.body.style.overflow = ""; }
 
     function setT(t, btn) {
       document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
-      document.getElementById("modalBody").innerText = state.item[t];
+      document.getElementById("modalBody").innerText = activeI[t];
     }
 
-    window.onload = () => {
-      switchGame("Limbus");
-      setTimeout(() => document.getElementById("loading").classList.add("hide"), 800);
-    };
+    window.onload = () => { switchG("Limbus", null); };
   </script>
 </body>
 </html>
