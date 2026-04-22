@@ -1,0 +1,40 @@
+/* 右下角通知 */
+.music-note {
+    position: fixed; bottom: 80px; right: 20px;
+    background: rgba(0, 0, 0, 0.85);
+    border-left: 4px solid var(--pm-red);
+    padding: 12px 20px; border-radius: 8px;
+    color: white; font-size: 14px; z-index: 2000;
+    transform: translateX(120%); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+.music-note.show { transform: translateX(0); }
+
+/* 音樂按鈕 */
+#music-control-btn {
+    position: fixed; bottom: 20px; right: 20px;
+    width: 50px; height: 50px; background: var(--pm-card);
+    border: 1px solid var(--pm-gold); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 2000; font-size: 20px;
+    transition: 0.3s; box-shadow: var(--pm-shadow);
+}
+#music-control-btn:hover { transform: rotate(15deg) scale(1.1); background: var(--pm-gold); color: black; }
+
+/* 曲目設定視窗 */
+#playlist-window {
+    position: fixed; bottom: 80px; right: 20px;
+    width: 280px; background: #111; border: 1px solid var(--pm-border);
+    border-radius: 12px; display: none; flex-direction: column;
+    z-index: 1999; overflow: hidden; box-shadow: var(--pm-shadow);
+}
+#playlist-window.open { display: flex; animation: fadeIn 0.3s ease; }
+#playlist-content { max-height: 300px; overflow-y: auto; padding: 10px; }
+.track-item {
+    padding: 10px; cursor: pointer; border-radius: 6px;
+    font-size: 13px; color: #888; transition: 0.2s;
+}
+.track-item:hover { background: rgba(212, 175, 55, 0.1); color: var(--pm-gold); }
+.track-item.active { color: var(--pm-red); background: var(--pm-red-soft); }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
