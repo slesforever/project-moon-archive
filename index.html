@@ -126,32 +126,42 @@
     const DB = {
       Limbus: {
         cats: {
-          core: { label: "核心人員", items: [
-            { name: "Dante 但丁", tag: "Manager / LCB", files: ["Dante.png"], intro: "邊獄公司的管理者，也是多項認知技術的載體。", bg: "以時鐘作為其具象化的認知介面。", story: "在循環中與罪人建立共感。" },
-            { name: "Vergilius 維吉里烏斯", tag: "Guide / LCB", files: ["Vergilius.png"], intro: "Limbus Company 的引導者。", bg: "曾被稱為最不穩定的收割者之一。", story: "以冷徹的理性監控著計畫。" }
+          core: { label: "引路人", items: [
+            { name: "Dante 但丁", tag: "Manager / LCB", files: ["Dante.png"], intro: "邊獄公司的管理者，也是多項認知技術的載體。", bg: "以時鐘作為其具象化的認知介面。", story: "《Limbus Company》中的但丁（Dante）是LCB（Limbus Company Bus）的執行經理，頭部為鐘錶的失憶者。在尋找金枝以恢復記憶的過程中，他們與12名罪人簽訂契約，利用獨特能力使死亡的罪人回溯復活。但丁性格溫和、懦弱，與暴力罪人形成對比，其過去疑與「大人物」有關，受維吉里烏斯指導。" },
+            { name: "Vergilius 維吉里烏斯", tag: "Guide / LCB", files: ["Vergilius.png"], intro: "Limbus Company 的引導者。", bg: "曾被稱為最不穩定的收割者之一。", story: "曾是實力頂尖的色彩級收尾人。他背景深沉，曾經營孤兒院致力贖罪，卻因遭「堇紫淚滴」伊織設局而失去一切。現任邊獄公司LCB部門嚮導，性格冷酷毒舌，但實則溫柔，對罪人們態度逐漸緩和。" },
+            { name: "Vergilius 卡戎", tag: "Guide / LCB", files: ["Charon.png"], intro: "Limbus Company 的司機大佬。", bg: "除了駕駛技術也許有點差而已。", story: "是邊獄巴士的司機，本名拉佩斯（Lapis），曾是維吉里烏斯收養的孤兒。在孤兒院毀滅後，她遭環指綁架並成為玻璃窗實驗中唯一的倖存者，隨後被名為「卡戎」的人格覆蓋。" }
+            
           ]},
           sinners: { label: "12 罪人", items: [
-            { name: "Yi Sang 易桑", tag: "No. 01 / LCB", files: ["Yi_Sang_Portrait.png"], intro: "前天才研究員。", bg: "他在破碎的理想中觀測羽翼。", story: "第四章明白『飛翔』的不變意志。" },
+            { name: "Yi Sang 李箱", tag: "No. 01 / LCB", files: ["Yi_Sang_Portrait.png"], intro: "前天才研究員。", bg: "他在破碎的理想中觀測羽翼。", story: "第四章明白『飛翔』的不變意志。" },
             { name: "Faust 浮士德", tag: "No. 02 / LCB", files: ["Faust_Portrait.png"], intro: "全知全能的天才。", bg: "掌握都市秘密的核心。", story: "待檢索。" },
             { name: "Don Quixote 唐吉訶德", tag: "No. 03 / LCB", files: ["Don_Quixote_Portrait.png"], intro: "熱衷正義的少女。", bg: "其熱忱背後是認知的錯位。", story: "第七章直面『夢的終點』。" },
-            { name: "Ryoshu 龍州", tag: "No. 04 / LCB", files: ["Ryoshu_Portrait.png"], intro: "極致的藝術家。", bg: "以刀刃作畫。", story: "待檢索。" },
-            { name: "Meursault 梅爾索", tag: "No. 05 / LCB", files: ["Meursault_Portrait.png"], intro: "理性執行者。", bg: "遵循程序與指令。", story: "待檢索。" },
+            { name: "Ryoshu 良秀", tag: "No. 04 / LCB", files: ["Ryoshu_Portrait.png"], intro: "極致的藝術家。", bg: "以刀刃作畫。", story: "待檢索。" },
+            { name: "Meursault 莫爾索", tag: "No. 05 / LCB", files: ["Meursault_Portrait.png"], intro: "理性執行者。", bg: "遵循程序與指令。", story: "待檢索。" },
             { name: "Hong Lu 洪路", tag: "No. 06 / LCB", files: ["Hong_Lu_Portrait.png"], intro: "天真的大少爺。", bg: "家族背景複雜。", story: "待檢索。" },
             { name: "Heathcliff 希斯克里夫", tag: "No. 07 / LCB", files: ["Heathcliff_Portrait.png"], intro: "暴躁的戰鬥員。", bg: "呼嘯山莊的悲劇。", story: "第六章是其核心故事。" },
             { name: "Ishmael 以實瑪利", tag: "No. 08 / LCB", files: ["Ishmael_Portrait.png"], intro: "前海員。", bg: "追逐著那頭白鯨。", story: "第五章是其核心故事。" },
             { name: "Rodion 羅德昂", tag: "No. 09 / LCB", files: ["Rodion_Portrait.png"], intro: "熱情的豪放女子。", bg: "罪與罰的回憶糾纏。", story: "待檢索。" },
             { name: "Sinclair 辛克萊", tag: "No. 10 / LCB", files: ["Sinclair_Portrait.png"], intro: "懦弱但潛力巨大的少年。", bg: "家庭被屠殺的創傷。", story: "第三章核心人物。" },
             { name: "Outis 奧緹斯", tag: "No. 11 / LCB", files: ["Outis_Portrait.png"], intro: "幹練的軍官。", bg: "極度忠誠且効率。", story: "待檢索。" },
-            { name: "Gregor 葛列格爾", tag: "No. 12 / LCB", files: ["Gregor_Portrait.png"], intro: "老兵。", bg: "手臂異變為蟲。", story: "第一章核心人物。" }
+            { name: "Gregor 格里高爾", tag: "No. 12 / LCB", files: ["Gregor_Portrait.png"], intro: "老兵。", bg: "手臂異變為蟲。", story: "第一章核心人物。" }
           ]}
         }
       },
       Ruina: {
         cats: {
           librarians: { label: "總司書", items: [
-            { name: "Roland 羅蘭", tag: "總類層", files: ["Roland_Portrait.png"], intro: "黑色沉默的男人。", bg: "在都市中製造了無數血案的人類。", story: "最終選擇寬恕安吉拉。" },
-            { name: "Angela 安吉拉", tag: "館長", files: ["Angela_Portrait.png"], intro: "圖書館的管理者。", bg: "在百萬年數據中產生了自由的推測。", story: "結局時將光播灑向都市。" },
-            { name: "Gebura 潔布拉", tag: "語言層", files: ["Gebura_Portrait.png"], intro: "傳說中的紅霧。", bg: "前懲戒部主管，力量的具象化。", story: "在圖書館找回了戰鬥的初衷。" }
+            { name:"Angela 安吉拉", tag:"Director / Library", files:["Angela.png"], intro:"圖書館館長AI。", bg:"Lobotomy核心AI演化。", story:"為理解人類而建立圖書館，將人轉化為書。"},
+            { name:"Roland 羅蘭", tag:"Assistant / Fixer", files:["Roland.png"], intro:"前收尾人司書。", bg:"都市底層Fixer。", story:"因妻子死亡進入圖書館尋找真相與復仇。"},
+            { name:"Malkuth 馬爾庫特", tag:"Sephirah / Control", files:["Malkuth.png"], intro:"象徵成長。", bg:"控制部主管。", story:"渴望認同的努力型人格司書。"},
+            { name:"Yesod 耶索德", tag:"Sephirah / Information", files:["Yesod.png"], intro:"象徵理性。", bg:"資訊部主管。", story:"極度理性，重視秩序與準確性。"},
+            { name:"Hod 霍德", tag:"Sephirah / Education", files:["Hod.png"], intro:"象徵情感。", bg:"懲罰與教育部主管。", story:"溫柔但常自責，重視寬恕。"},
+            { name:"Netzach 涅扎赫", tag:"Sephirah / Safety", files:["Netzach.png"], intro:"象徵逃避。", bg:"安全部主管。", story:"長期消極，以酒精逃避現實。"},
+            { name:"Tiphereth 提菲瑞斯", tag:"Sephirah / Light", files:["Tiphereth_A.png","Tiphereth_B.png"], intro:"雙子司書。", bg:"人格分裂。", story:"同一存在分裂成兩個自我。"},
+            { name:"Gebura 格布拉", tag:"Sephirah / Combat", files:["Gebura.png"], intro:"紅霧。", bg:"最強收尾人。", story:"從破壞者轉向守護者的戰鬥存在。"},
+            { name:"Chesed 謝斯德", tag:"Sephirah / Welfare", files:["Chesed.png"], intro:"象徵慈悲。", bg:"福利部主管。", story:"理解體制但仍保持有限善意。"},
+            { name:"Binah 賓赫", tag:"Sephirah / Extraction", files:["Binah.png"], intro:"象徵真理。", bg:"觀察者。", story:"理解一切但不干涉的存在。"},
+            { name:"Hokma 霍克瑪", tag:"Sephirah / Records", files:["Hokma.png"], intro:"象徵記錄。", bg:"歷史保存者。", story:"記錄所有循環與真相的司書。"}
           ]},
           enemies: { label: "都市敵人", items: [
             { name: "Argalia 阿爾加利亞", tag: "漆黑沉默", files: ["Argalia_Portrait.png"], intro: "扭曲的劍客。", bg: "以音樂作為其殺戮的美學。", story: "終焉演奏會的指揮者。" }
@@ -172,7 +182,9 @@
             { name: "Binah", tag: "研發部主管", files: ["Binah.png"], intro: "冷冽且接近真相。", bg: "掌握了最深層的認知機密。", story: "待檢索。" }
           ]},
           abnormalities: { label: "異想體", items: [
-            { name: "Nothing There 一無所有", tag: "ALEPH", files: ["Nothing_There.png"], intro: "擬態異想體。", bg: "渴望人類的外殼與愛。", story: "「你好」——它重複著這句話。" }
+            { name: "Nothing There 一無所有", tag: "ALEPH", files: ["Nothing_There.png"], intro: "擬態異想體。", bg: "渴望人類的外殼與愛。", story: "「你好」——它重複著這句話。" },
+            { name: "WhiteNight 白夜", tag: "ALEPH / 救贖", files: ["WhiteNight.png"], intro: "宣稱要救贖眾生，實則實行絕對統治的異想體。", bg: "身邊環繞著十二名使徒，隨時準備迎接所謂的降臨。", story: "「當時間終結之時，我將在此引導你們。」" },
+            { name: "Mountain of Smiling Bodies 屍山", tag: "ALEPH / 飢餓", files: ["MosB.png"], intro: "由無數屍體堆疊而成的恐怖異想體。", bg: "會吞噬周遭的屍體來壯大體積，其哭聲中夾雜著笑聲。", story: "一旦壓制失敗，它將化為吞噬整間公司的血肉風暴。" }
           ]}
         }
       }
