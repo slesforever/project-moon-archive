@@ -35,6 +35,7 @@
       overflow-x: hidden;
     }
 
+    /* 背景掃描線特效 */
     body::before {
       content: "";
       position: fixed;
@@ -46,497 +47,91 @@
       z-index: 1;
     }
 
-    .app {
-      position: relative;
-      z-index: 2;
-      min-height: 100vh;
-    }
+    .app { position: relative; z-index: 2; min-height: 100vh; }
 
+    /* Loading 畫面 */
     .loading {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      display: grid;
-      place-items: center;
-      background:
-        radial-gradient(circle at center, rgba(255, 59, 59, 0.14), transparent 40%),
-        #050505;
+      position: fixed; inset: 0; z-index: 9999;
+      display: grid; place-items: center;
+      background: radial-gradient(circle at center, rgba(255, 59, 59, 0.14), transparent 40%), #050505;
       transition: opacity .45s ease, visibility .45s ease;
     }
     .loading.hide { opacity: 0; visibility: hidden; }
     .loading-card {
-      width: min(92vw, 520px);
-      border: 1px solid rgba(212, 175, 55, 0.45);
-      border-radius: 22px;
+      width: min(92vw, 520px); border: 1px solid rgba(212, 175, 55, 0.45); border-radius: 22px;
       background: linear-gradient(180deg, rgba(22,22,22,0.96), rgba(8,8,8,0.96));
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.03), var(--pm-shadow);
-      padding: 28px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
+      padding: 28px; text-align: center; position: relative; overflow: hidden;
     }
-    .loading-card::before {
-      content: "";
-      position: absolute;
-      inset: -40% -20%;
-      background: linear-gradient(115deg, transparent 42%, rgba(255,255,255,0.08) 50%, transparent 58%);
-      transform: translateX(-40%);
-      animation: sweep 1.6s linear infinite;
-    }
-    @keyframes sweep { 0% { transform: translateX(-40%) rotate(0deg); } 100% { transform: translateX(40%) rotate(0deg); } }
-    .loading-title {
-      position: relative;
-      font-size: clamp(1.8rem, 4vw, 2.6rem);
-      letter-spacing: 0.22em;
-      color: #fff;
-      text-shadow: 0 0 18px rgba(255,59,59,0.35);
-      margin: 0 0 10px;
-    }
-    .loading-sub {
-      position: relative;
-      margin: 0 0 18px;
-      color: var(--pm-muted);
-      letter-spacing: 0.08em;
-      font-family: monospace;
-    }
-    .scanbar {
-      position: relative;
-      height: 10px;
-      background: #0e0e0e;
-      border: 1px solid #333;
-      border-radius: 999px;
-      overflow: hidden;
-      margin-top: 18px;
-    }
-    .scanbar > span {
-      display: block;
-      height: 100%;
-      width: 35%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, transparent, var(--pm-red), var(--pm-gold), transparent);
-      animation: load 1.3s ease-in-out infinite;
-    }
-    @keyframes load {
-      0% { transform: translateX(-120%); }
-      100% { transform: translateX(320%); }
-    }
+    .loading-title { font-size: 2.6rem; letter-spacing: 0.22em; color: #fff; text-shadow: 0 0 18px rgba(255,59,59,0.35); margin: 0; }
+    .scanbar { height: 10px; background: #0e0e0e; border: 1px solid #333; border-radius: 999px; overflow: hidden; margin-top: 18px; position: relative; }
+    .scanbar span { display: block; height: 100%; width: 35%; background: linear-gradient(90deg, transparent, var(--pm-red), var(--pm-gold), transparent); animation: load 1.3s ease-in-out infinite; }
+    @keyframes load { 0% { transform: translateX(-120%); } 100% { transform: translateX(320%); } }
 
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      backdrop-filter: blur(10px);
-      background: linear-gradient(180deg, rgba(18, 0, 0, 0.95), rgba(10, 10, 10, 0.92));
-      border-bottom: 1px solid rgba(255, 59, 59, 0.55);
-      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-    }
-
-    .header-inner {
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 22px 18px 18px;
-    }
-
-    .brand-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .logo {
-      font-size: clamp(1.4rem, 3.2vw, 2.45rem);
-      letter-spacing: 0.22em;
-      font-weight: 800;
-      color: #fff;
-      text-shadow: 0 0 10px rgba(255,59,59,0.35);
-      text-transform: uppercase;
-    }
-
-    .subtitle {
-      color: var(--pm-muted);
-      font-size: 0.95rem;
-      font-family: monospace;
-      letter-spacing: 0.06em;
-    }
-
-    .game-nav,
-    .sub-nav {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .game-nav { margin-bottom: 12px; }
-    .sub-nav { margin-bottom: 14px; }
+    /* Header & Nav */
+    header { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); background: rgba(10, 10, 10, 0.92); border-bottom: 1px solid rgba(255, 59, 59, 0.55); }
+    .header-inner { max-width: var(--max); margin: 0 auto; padding: 22px 18px; }
+    .logo { font-size: 1.8rem; letter-spacing: 0.22em; font-weight: 800; color: #fff; text-transform: uppercase; text-align: center; margin-bottom: 15px; }
+    .game-nav, .sub-nav { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 12px; }
 
     button {
-      appearance: none;
-      border: 1px solid var(--pm-gold);
-      background: rgba(255,255,255,0.01);
-      color: var(--pm-gold);
-      padding: 10px 16px;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: transform .18s ease, background .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      white-space: nowrap;
+      border: 1px solid var(--pm-gold); background: transparent; color: var(--pm-gold);
+      padding: 10px 18px; border-radius: 999px; cursor: pointer; font-weight: 700; transition: all .2s;
     }
-    button:hover { transform: translateY(-1px); box-shadow: 0 0 0 1px rgba(212,175,55,0.22), 0 0 18px rgba(212,175,55,0.16); }
-    button.active {
-      background: var(--pm-gold);
-      color: #0a0a0a;
-      border-color: var(--pm-gold);
-      box-shadow: 0 0 20px rgba(212,175,55,0.28);
-    }
-    .sub-nav button {
-      border-color: #333;
-      color: #9c9c9c;
-      background: rgba(255,255,255,0.01);
-      font-size: 0.92rem;
-      padding: 8px 13px;
-    }
-    .sub-nav button.active {
-      border-color: var(--pm-red);
-      color: var(--pm-red);
-      background: var(--pm-red-soft);
-      box-shadow: 0 0 0 1px rgba(255,59,59,0.12);
-    }
+    button.active { background: var(--pm-gold); color: #0a0a0a; box-shadow: 0 0 15px rgba(212,175,55,0.4); }
+    .sub-nav button { border-color: #333; color: #9c9c9c; }
+    .sub-nav button.active { border-color: var(--pm-red); color: var(--pm-red); background: var(--pm-red-soft); }
 
-    .search-row {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 4px 0 0;
-    }
-    .search-wrap {
-      position: relative;
-    }
-    .search-wrap::before {
-      content: ">";
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--pm-red);
-      font-family: monospace;
-      font-size: 1.1rem;
-      pointer-events: none;
-    }
-    #search {
-      width: 100%;
-      border-radius: 14px;
-      border: 1px solid #363636;
-      background: #0f0f0f;
-      color: #f1f1f1;
-      padding: 13px 14px 13px 34px;
-      outline: none;
-      font-size: 0.98rem;
-      font-family: monospace;
-      transition: border-color .2s ease, box-shadow .2s ease;
-    }
-    #search:focus {
-      border-color: rgba(255, 59, 59, 0.8);
-      box-shadow: 0 0 0 4px rgba(255,59,59,0.12);
-    }
+    /* Grid & Cards */
+    .grid { max-width: var(--max); margin: 0 auto; padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+    .card { background: var(--pm-card); border: 1px solid var(--pm-border); border-radius: var(--radius); overflow: hidden; cursor: pointer; transition: 0.3s; }
+    .card:hover { transform: translateY(-5px); border-color: var(--pm-gold); }
+    .img-box { width: 100%; aspect-ratio: 1/1.2; background: #000; overflow: hidden; }
+    .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
+    .card-info { padding: 15px; text-align: center; }
+    .card-info h3 { margin: 5px 0; font-size: 1.1rem; }
+    .card-info small { color: var(--pm-red); font-family: monospace; }
 
-    main {
-      position: relative;
-      z-index: 2;
-    }
-
-    .grid {
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 24px 16px 42px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-      gap: 18px;
-    }
-
-    .card {
-      background: linear-gradient(180deg, var(--pm-card), var(--pm-card-2));
-      border: 1px solid var(--pm-border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      cursor: pointer;
-      box-shadow: var(--pm-shadow);
-      transform: translateY(0);
-      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
-      position: relative;
-      min-height: 100%;
-    }
-    .card:hover {
-      transform: translateY(-5px);
-      border-color: rgba(212,175,55,0.75);
-      box-shadow: 0 14px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(212,175,55,0.08);
-    }
-
-    .img-box {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 1 / 1.2;
-      background: linear-gradient(135deg, #060606, #141414);
-      overflow: hidden;
-      border-bottom: 1px solid #262626;
-    }
-    .img-box::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, transparent, rgba(0,0,0,0.45));
-      pointer-events: none;
-    }
-    .img-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transform: scale(1.01);
-      transition: transform .25s ease, filter .25s ease;
-      filter: saturate(1.02) contrast(1.02);
-    }
-    .card:hover .img-box img { transform: scale(1.05); }
-
-    .card-info {
-      padding: 13px 14px 14px;
-      text-align: center;
-    }
-    .card-info small {
-      display: block;
-      color: var(--pm-red);
-      font-family: monospace;
-      font-size: 0.82rem;
-      margin-bottom: 5px;
-      letter-spacing: 0.04em;
-    }
-    .card-info h3 {
-      margin: 0;
-      color: #fff;
-      font-size: 1.03rem;
-      line-height: 1.2;
-    }
-    .card-info p {
-      margin: 7px 0 0;
-      color: var(--pm-muted);
-      font-size: 0.88rem;
-      line-height: 1.45;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .empty {
-      max-width: var(--max);
-      margin: 24px auto 0;
-      padding: 18px 16px 40px;
-      color: var(--pm-muted);
-      text-align: center;
-      font-family: monospace;
-    }
-
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      background: rgba(0,0,0,0.92);
-      backdrop-filter: blur(7px);
-      padding: 14px;
-    }
-    .modal.open { display: block; }
-    .modal-content {
-      width: min(100%, 980px);
-      height: min(100%, 92vh);
-      margin: 0 auto;
-      background: linear-gradient(180deg, #101010, #0b0b0b);
-      border: 1px solid rgba(255,59,59,0.72);
-      border-radius: 22px;
-      overflow: hidden;
-      box-shadow: 0 18px 50px rgba(0,0,0,0.6);
-      display: grid;
-      grid-template-rows: auto auto 1fr;
-    }
-    .close {
-      position: absolute;
-      top: 10px;
-      right: 16px;
-      font-size: 34px;
-      color: #fff;
-      cursor: pointer;
-      z-index: 3;
-      line-height: 1;
-      user-select: none;
-    }
-    .modal-header {
-      position: relative;
-      display: flex;
-      gap: 22px;
-      flex-wrap: wrap;
-      align-items: center;
-      padding: 24px;
-      background: linear-gradient(180deg, #181818, #121212);
-      border-bottom: 1px solid #2a2a2a;
-    }
-    #modalImg {
-      width: 170px;
-      max-width: 40vw;
-      aspect-ratio: 1 / 1.2;
-      object-fit: cover;
-      border-radius: 14px;
-      border: 1px solid rgba(212,175,55,0.65);
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.03);
-      background: #060606;
-    }
-    .header-info h2 {
-      margin: 0;
-      color: var(--pm-gold);
-      font-size: clamp(1.5rem, 4vw, 2.35rem);
-      line-height: 1.15;
-    }
-    .header-info p {
-      margin: 10px 0 0;
-      color: var(--pm-red);
-      font-weight: 700;
-      line-height: 1.5;
-      font-family: monospace;
-    }
-
-    .modal-tabs {
-      display: flex;
-      background: #090909;
-      border-bottom: 1px solid #2a2a2a;
-      overflow-x: auto;
-      scrollbar-width: thin;
-    }
-    .tab-btn {
-      flex: 1 0 0;
-      min-width: 140px;
-      border: none;
-      border-radius: 0;
-      padding: 14px 16px;
-      color: #9a9a9a;
-      background: transparent;
-      border-right: 1px solid #1f1f1f;
-      font-size: 0.98rem;
-    }
-    .tab-btn:hover { transform: none; box-shadow: none; }
-    .tab-btn.active {
-      color: var(--pm-red);
-      background: #111111;
-      border-bottom: 3px solid var(--pm-red);
-    }
-    .modal-body {
-      padding: 22px 24px 30px;
-      line-height: 1.9;
-      color: #d2d2d2;
-      font-size: 1rem;
-      overflow: auto;
-      white-space: pre-wrap;
-    }
-    .modal-body h3 {
-      margin: 0 0 8px;
-      color: #fff;
-    }
-    .modal-body .meta {
-      display: inline-block;
-      margin: 0 0 14px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(255,59,59,0.1);
-      color: #ff8d8d;
-      font-size: 0.84rem;
-      font-family: monospace;
-    }
-    .modal-body .section {
-      background: rgba(255,255,255,0.02);
-      border: 1px solid #232323;
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 14px;
-    }
-    .modal-body ul {
-      margin: 10px 0 0 18px;
-      padding: 0;
-    }
-    .modal-body li { margin: 4px 0; }
-
-    .footer-note {
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 0 16px 28px;
-      color: #787878;
-      font-size: 0.88rem;
-      text-align: center;
-      font-family: monospace;
-    }
-
-    @media (max-width: 720px) {
-      .header-inner { padding: 16px 12px 14px; }
-      .brand-row { align-items: flex-start; }
-      .game-nav, .sub-nav { justify-content: flex-start; overflow-x: auto; padding-bottom: 4px; flex-wrap: nowrap; }
-      .game-nav::-webkit-scrollbar, .sub-nav::-webkit-scrollbar, .modal-tabs::-webkit-scrollbar { height: 6px; }
-      .game-nav::-webkit-scrollbar-thumb, .sub-nav::-webkit-scrollbar-thumb, .modal-tabs::-webkit-scrollbar-thumb { background: #333; border-radius: 999px; }
-      .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; padding: 18px 12px 34px; }
-      .card-info { padding: 11px 10px 12px; }
-      .card-info h3 { font-size: 0.96rem; }
-      .modal { padding: 0; }
-      .modal-content { width: 100%; height: 100%; border-radius: 0; }
-      .modal-header { padding: 18px 14px; gap: 16px; }
-      #modalImg { width: 120px; }
-      .modal-body { padding: 18px 14px 24px; font-size: 0.98rem; }
-      .tab-btn { min-width: 120px; padding: 13px 10px; }
-      .close { top: 8px; right: 12px; font-size: 30px; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
-    }
+    /* Modal */
+    .modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); }
+    .modal.open { display: flex; align-items: center; justify-content: center; }
+    .modal-content { width: 90%; max-width: 800px; background: #0f0f0f; border: 1px solid var(--pm-red); border-radius: 20px; overflow: hidden; position: relative; }
+    .close { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; color: #fff; z-index: 10; }
+    .modal-header { display: flex; padding: 30px; gap: 25px; background: #151515; border-bottom: 1px solid #222; }
+    #modalImg { width: 150px; border-radius: 10px; border: 1px solid var(--pm-gold); }
+    .modal-tabs { display: flex; background: #0a0a0a; }
+    .tab-btn { flex: 1; padding: 15px; border: none; background: none; color: #666; cursor: pointer; border-bottom: 2px solid transparent; }
+    .tab-btn.active { color: var(--pm-red); border-bottom-color: var(--pm-red); background: #111; }
+    .modal-body { padding: 30px; line-height: 1.8; color: #ccc; white-space: pre-wrap; height: 300px; overflow-y: auto; }
   </style>
 </head>
 <body>
-  <div id="loading" class="loading" aria-hidden="true">
+
+  <div id="loading" class="loading">
     <div class="loading-card">
       <h1 class="loading-title">PROJECT MOON ARCHIVE</h1>
-      <p class="loading-sub" id="loadingText">Synchronizing data...</p>
-      <div class="scanbar" aria-hidden="true"><span></span></div>
+      <div class="scanbar"><span></span></div>
     </div>
   </div>
 
   <div class="app">
     <header>
       <div class="header-inner">
-        <div class="brand-row">
-          <div class="logo">PROJECT MOON ARCHIVE</div>
-          <div class="subtitle">Library / Corp / Company unified archive</div>
-        </div>
-
+        <div class="logo">PROJECT MOON ARCHIVE</div>
         <div class="game-nav" id="gameNav"></div>
         <div class="sub-nav" id="subnav"></div>
-
-        <div class="search-row">
-          <div class="search-wrap">
-            <input id="search" type="text" placeholder="> 輸入名稱、編號、身分關鍵字..." />
-          </div>
-        </div>
       </div>
     </header>
 
     <main id="dataGrid" class="grid"></main>
-    <div id="emptyState" class="empty" style="display:none;">沒有符合條件的資料。</div>
 
-    <div id="detailModal" class="modal" aria-hidden="true">
+    <div id="detailModal" class="modal">
       <div class="modal-content">
-        <span class="close" onclick="closeM()" aria-label="關閉">&times;</span>
+        <span class="close" onclick="closeM()">&times;</span>
         <div class="modal-header">
-          <img id="modalImg" src="" alt="Portrait" referrerpolicy="no-referrer" />
+          <img id="modalImg" src="" />
           <div class="header-info">
-            <h2 id="modalTitle"></h2>
-            <p id="modalTag"></p>
+            <h2 id="modalTitle" style="color:var(--pm-gold); margin:0;"></h2>
+            <p id="modalTag" style="color:var(--pm-red); font-family:monospace; margin:10px 0;"></p>
           </div>
         </div>
         <div class="modal-tabs">
@@ -547,8 +142,6 @@
         <div id="modalBody" class="modal-body"></div>
       </div>
     </div>
-
-    <div class="footer-note">GitHub Pages compatible · local assets build · place images in /assets/img/*</div>
   </div>
 
   <script>
@@ -561,291 +154,137 @@
     const DB = {
       Limbus: {
         cats: {
-          sinners: {
-            label: "12 罪人",
-            items: [
-              { id: "01", name: "Yi Sang 易桑", tag: "No. 01 / 詩人與觀察者", files: ["Yi Sang Portrait.png", "Yi_Sang_Portrait.png", "Yi Sang.png"], intro: "前九人會成員，擅長鏡像與理論思考。", bg: "他總在碎裂的現實裡尋找秩序與自我，語氣溫和，內在卻極其敏銳。", story: "第四章聚焦其價值觀的重整，從自我否定走向重新定義『飛翔』的可能。" },
-              { id: "02", name: "Faust 浮士德", tag: "No. 02 / 全知傾向", files: ["Faust Portrait.png", "Faust_Portrait.png", "Faust.png"], intro: "自稱最接近全知的天才。", bg: "話語克制而精準，對資訊與結論的渴求近乎偏執。", story: "在多個章節中扮演隱性解說者與推進者。" },
-              { id: "03", name: "Don Quixote 唐吉訶德", tag: "No. 03 / 正義狂熱者", files: ["Don Quixote Portrait.png", "Don_Quixote_Portrait.png", "Don Quixote.png"], intro: "熱衷正義與浪漫的少女。", bg: "她的言行充滿誇張的俠義感，背後藏著對世界的誤讀與執念。", story: "第七章將她的信念與真相正面碰撞。" },
-              { id: "04", name: "Ryoshu 龍州", tag: "No. 04 / 刀與美學", files: ["Ryoshu Portrait.png", "Ryoshu_Portrait.png", "Ryoshu.png"], intro: "以暴烈方式詮釋美感。", bg: "她對『作品』的執著極端而純粹，常以冷酷口吻切開事物的本質。", story: "多次作為戰鬥爆點與風格化敘事的中心。" },
-              { id: "05", name: "Meursault 梅爾索", tag: "No. 05 / 理性執行者", files: ["Meursault Portrait.png", "Meursault_Portrait.png", "Meursault.png"], intro: "遵循程序與結果的行動者。", bg: "他的沉默不是空白，而是把主觀情緒徹底壓縮後的狀態。", story: "常在任務與價值衝突之中維持冰冷的執行。" },
-              { id: "06", name: "Hong Lu 洪路", tag: "No. 06 / 天真貴公子", files: ["Hong Lu Portrait.png", "Hong_Lu_Portrait.png", "Hong Lu.png"], intro: "以輕鬆語氣看待殘酷現實。", bg: "他的『不在乎』往往像是一層保護性的距離感。", story: "在故事中常作為氣氛緩衝與異質視角。" },
-              { id: "07", name: "Heathcliff 希斯克里夫", tag: "No. 07 / 憤怒與反抗", files: ["Heathcliff Portrait.png", "Heathcliff_Portrait.png", "Heathcliff.png"], intro: "衝動、直接、情緒化。", bg: "長期被剝奪與輕視的經驗，使他的防禦幾乎全都以怒意表現。", story: "第六章是他最完整的情感展開之一。" },
-              { id: "08", name: "Ishmael 以實瑪利", tag: "No. 08 / 追逐白鯨者", files: ["Ishmael Portrait.png", "Ishmael_Portrait.png", "Ishmael.png"], intro: "理性外殼下藏著執著。", bg: "她不是單純在追目標，而是在追逐一段無法放下的經歷。", story: "第五章為其內在焦慮與執念提供主軸。" },
-              { id: "09", name: "Rodion 羅德昂", tag: "No. 09 / 熱情賭徒", files: ["Rodion Portrait.png", "Rodion_Portrait.png", "Rodion.png"], intro: "擅長用輕鬆感掩飾沉重。", bg: "她的熱情、玩笑與行動力，常是對不安的反射性反應。", story: "在多段劇情裡以社交張力與道德困境呈現層次。" },
-              { id: "10", name: "Sinclair 辛克萊", tag: "No. 10 / 破碎成長", files: ["Sinclair Portrait.png", "Sinclair_Portrait.png", "Sinclair.png"], intro: "敏感、壓抑、容易被牽動。", bg: "他在壓力下逐步建立自己的行動邏輯，從被動走向主動。", story: "第三章是其核心轉折。" },
-              { id: "11", name: "Outis 奧緹斯", tag: "No. 11 / 戰術官", files: ["Outis Portrait.png", "Outis_Portrait.png", "Outis.png"], intro: "講究效率與紀律。", bg: "她的每一句話幾乎都像命令，時常將團隊拉回任務本身。", story: "在戰術與服從的框架下逐漸顯露個人輪廓。" },
-              { id: "12", name: "Gregor 葛列格爾", tag: "No. 12 / 前線老兵", files: ["Gregor Portrait.png", "Gregor_Portrait.png", "Gregor.png"], intro: "常以輕描淡寫帶過自身傷痕。", bg: "他的身體與經歷都帶著戰爭留下的後遺症。", story: "第一章讓他成為團隊與玩家的主要進入點。" }
-            ]
-          }
+          sinners: { label: "12 罪人", items: [
+            { name: "Yi Sang 易桑", tag: "No. 01", files: ["Yi Sang Portrait.png"], intro: "前天才研究員。", bg: "他在破碎的理想中，試圖觀測不存在的羽翼。", story: "第四章聚焦其價值觀的重整。" },
+            { name: "Faust 浮士德", tag: "No. 02", files: ["Faust Portrait.png"], intro: "自稱最接近全知的天才。", bg: "其言語克制，對結論的渴求近乎偏執。", story: "身為解說者引導著巴士的前進。" },
+            { name: "Don Quixote 唐吉訶德", tag: "No. 03", files: ["Don Quixote Portrait.png"], intro: "熱衷正義的少女。", bg: "言行充滿俠義感，背後藏著極深的執念。", story: "第七章直面其血色本質。" }
+          ]}
         }
       },
       Ruina: {
         cats: {
-          librarians: {
-            label: "圖書館司書",
-            items: [
-              { id: "R1", name: "Roland 羅蘭", tag: "總類層司書", files: ["RolandProfile.png", "Roland Portrait.png", "Roland.png"], intro: "曾被稱作黑色沉默的男人。", bg: "他用隨和和吐槽包裹創傷，把自己放在旁觀者位置，直到故事逼迫他直面真相。", story: "終局時與 Angela 完成關鍵性的和解與決裂後再整合。" },
-              { id: "R2", name: "Angela 安吉拉", tag: "圖書館管理者", files: ["AngelaProfile.png", "Angela Portrait.png", "Angela.png"], intro: "以圖書館為舞台的核心意志。", bg: "她的理性、計算與渴望自由構成整個作品的驅動核心。", story: "故事後段將她從控制者推向選擇者。" },
-              { id: "R3", name: "Gebura 潔布拉", tag: "語言層司書 / 紅霧", files: ["GeburaProfile.png", "Gebura Portrait.png", "Gebura.png"], intro: "力量與戰意的化身。", bg: "她的存在幾乎直接等同於壓制與正面衝擊。", story: "多次作為高壓戰鬥與劇情重心。" },
-              { id: "R4", name: "Malkuth 馬庫特", tag: "認知層司書", files: ["MalkuthProfile.png", "Malkuth Portrait.png", "Malkuth.png"], intro: "情緒外放、行動直接。", bg: "她是最容易把挫折與期待表現出來的人之一。", story: "常以『主管』視角的反差感帶出溫度。" },
-              { id: "R5", name: "Yesod 耶索德", tag: "技術層司書", files: ["YesodProfile.png", "Yesod Portrait.png", "Yesod.png"], intro: "規則與流程導向。", bg: "他對秩序、效率和結構有近乎偏執的要求。", story: "早期章節與工作流程主題相當貼合。" },
-              { id: "R6", name: "Hod 荷德", tag: "文學層司書", files: ["HodProfile.png", "Hod Portrait.png", "Hod.png"], intro: "善於理解與照顧他人。", bg: "她的溫柔並非軟弱，而是一種支撐整個系統的方式。", story: "在多段劇情中代表『被期待』與『自我修復』。" },
-              { id: "R7", name: "Netzach 涅札克", tag: "歷史層司書", files: ["NetzachProfile.png", "Netzach Portrait.png", "Netzach.png"], intro: "懶散但觀察力極強。", bg: "看似消極，實際上對局勢的感知非常銳利。", story: "其章節圍繞疲倦、麻痺與責任感。" },
-              { id: "R8", name: "Tiphereth 提菲雷特", tag: "藝術層司書", files: ["TipherethProfile.png", "Tiphereth Portrait.png", "Tiphereth.png"], intro: "以雙重視角呈現脆弱與堅持。", bg: "她們的設計讓『同一個人被拆成兩個部分』的意象非常鮮明。", story: "相關章節凸顯自我認同與被看見的需求。" },
-              { id: "R9", name: "Chesed 奇米德", tag: "自然層司書", files: ["ChesedProfile.png", "Chesed Portrait.png", "Chesed.png"], intro: "溫和、從容、擅長安撫。", bg: "像是一個始終保持平衡的人，卻也因此更顯深度。", story: "與管理層和結構性矛盾形成對照。" },
-              { id: "R10", name: "Binah 比那", tag: "科學層司書", files: ["BinahProfile.png", "Binah Portrait.png", "Binah.png"], intro: "冷靜、銳利、接近真相。", bg: "她的敘事語氣最像在剖開世界本身。", story: "在後期擔任重要的真相揭示者。" },
-              { id: "R11", name: "Hokma 霍克瑪", tag: "哲學層司書", files: ["HokmaProfile.png", "Hokma Portrait.png", "Hokma.png"], intro: "沉穩而有距離感。", bg: "像一位看過太多輪迴的人，說話總帶有沉著的份量。", story: "與終局敘事的結構密切相關。" },
-              { id: "R12", name: "Keter 卡特", tag: "核心層司書", files: ["KeterProfile.png", "Keter Portrait.png", "Keter.png"], intro: "將圖書館各層整合起來的核心。", bg: "他／她／它作為終局結構的最後一層，承載整個圖書館的意義。", story: "與總結性真相和終局佈局直接相連。" }
-            ]
-          }
+          librarians: { label: "司書", items: [
+            { name: "Roland 羅蘭", tag: "總類層", files: ["Roland Portrait.png"], intro: "隱藏在面具下的觀察者。", bg: "以復仇為名，在都市中尋求解脫。", story: "與 Angela 完成了終局的和解。" }
+          ]}
         }
       },
       Lobotomy: {
         cats: {
-          founders: {
-            label: "創始者與核心",
-            items: [
-              { id: "A", name: "Ayin 艾因", tag: "創始者", files: ["Ayin Portrait.png", "Ayin_Portrait.png", "Ayin.png"], intro: "腦葉公司的奠基者。", bg: "他為了完成計畫不斷將自己推向極限，將代價壓縮進每一次循環。", story: "與光之種計畫、時間循環與最終犧牲緊密相連。" },
-              { id: "C", name: "Carmen 卡門", tag: "創始者 / 計畫起點", files: ["Carmen Portrait.png", "Carmen_Portrait.png", "Carmen.png"], intro: "最初的理想來源。", bg: "她的存在與之後的一切，都形成了整個世界觀的起爆點。", story: "作為理想、聲音與影響的源頭留在整體敘事中。" },
-              { id: "Ang", name: "Angela 安吉拉", tag: "AI / 圖書館管理者", files: ["Angela Portrait.png", "Angela_Portrait.png", "Angela.png"], intro: "由計畫孕育的意志。", bg: "她在漫長循環後逐漸形成獨立意志，最後選擇自己的道路。", story: "從被設計的工具轉化為掌握選擇權的存在。" },
-              { id: "M", name: "Malkuth 馬庫特", tag: "Sephirah", files: ["Malkuth Portrait.png", "Malkuth_Portrait.png", "Malkuth.png"], intro: "第一位部門主管。", bg: "充滿情緒與壓力的管理者，常以強烈反應推動前進。", story: "第一部門的代表角色。" },
-              { id: "Y", name: "Yesod 耶索德", tag: "Sephirah", files: ["Yesod Portrait.png", "Yesod_Portrait.png", "Yesod.png"], intro: "偏重規則與系統。", bg: "他將秩序看得極重，並以此維持整體穩定。", story: "負責將流程與效率極大化。" },
-              { id: "H", name: "Hod 荷德", tag: "Sephirah", files: ["Hod Portrait.png", "Hod_Portrait.png", "Hod.png"], intro: "溫柔且擅長理解他人。", bg: "她的部門展現了照護、修復與溝通的重要性。", story: "為情感與秩序之間提供緩衝。" },
-              { id: "N", name: "Netzach 涅札克", tag: "Sephirah", files: ["Netzach Portrait.png", "Netzach_Portrait.png", "Netzach.png"], intro: "懶散卻可靠的主管。", bg: "他的疲憊感與旁觀角度，讓整體氛圍更有人味。", story: "與時間壓力和消耗主題呼應。" },
-              { id: "T1", name: "Tiphereth A", tag: "Sephirah", files: ["Tiphereth Portrait.png", "Tiphereth_Portrait.png", "Tiphereth.png"], intro: "雙體之一。", bg: "透過拆分視角，讓角色主題更具象。", story: "與另一半共同構成關鍵對照。" },
-              { id: "T2", name: "Tiphereth B", tag: "Sephirah", files: ["Tiphereth Portrait 2.png", "Tiphereth_Portrait_2.png", "Tiphereth2.png"], intro: "雙體之二。", bg: "與另一半一起表現記憶、身份與情緒分裂。", story: "和同名角色形成完整意義。" },
-              { id: "Cz", name: "Chesed 奇米德", tag: "Sephirah", files: ["Chesed Portrait.png", "Chesed_Portrait.png", "Chesed.png"], intro: "沉穩與安撫。", bg: "他讓整個部門具備一種不疾不徐的節奏。", story: "作為平衡器存在。" },
-              { id: "B", name: "Binah 比那", tag: "Sephirah", files: ["Binah Portrait.png", "Binah_Portrait.png", "Binah.png"], intro: "冷冽且接近真相。", bg: "她像是永遠先看到結果的人。", story: "在後段敘事中扮演重要解密位。" },
-              { id: "Hk", name: "Hokma 霍克瑪", tag: "Sephirah", files: ["Hokma Portrait.png", "Hokma_Portrait.png", "Hokma.png"], intro: "像見證者一樣的存在。", bg: "他的發言往往帶著更久遠的視角。", story: "與終局結構和見證主題密切相關。" }
-            ]
-          }
+          founders: { label: "創始者", items: [
+            { name: "Ayin 艾因", tag: "A", files: ["Ayin Portrait.png"], intro: "計畫執行者。", bg: "在無限循環中推測成功的機率。", story: "最終成為了觀測者眼中的光。" },
+            { name: "Angela 安吉拉", tag: "AI", files: ["Angela Portrait.png"], intro: "被賦予認知的機器。", bg: "在百萬年數據中產生了自由的推測。", story: "親手建立並拆解了圖書館。" }
+          ]}
         }
       }
     };
 
-    const state = {
-      game: "Limbus",
-      cat: "sinners",
-      item: null,
-      tab: "intro"
-    };
+    let state = { game: "Limbus", cat: "sinners", item: null };
 
-    const gameNav = document.getElementById("gameNav");
-    const subnav = document.getElementById("subnav");
-    const grid = document.getElementById("dataGrid");
-    const search = document.getElementById("search");
-    const emptyState = document.getElementById("emptyState");
-    const modal = document.getElementById("detailModal");
-    const modalImg = document.getElementById("modalImg");
-    const modalTitle = document.getElementById("modalTitle");
-    const modalTag = document.getElementById("modalTag");
-    const modalBody = document.getElementById("modalBody");
-
-    function makeDataUriPlaceholder(label) {
-      const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 360">
-          <defs>
-            <linearGradient id="g" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stop-color="#1d1d1d"/>
-              <stop offset="100%" stop-color="#090909"/>
-            </linearGradient>
-          </defs>
-          <rect width="300" height="360" fill="url(#g)"/>
-          <rect x="14" y="14" width="272" height="332" rx="16" fill="none" stroke="#ff3b3b" stroke-opacity="0.35"/>
-          <text x="50%" y="45%" text-anchor="middle" font-family="Segoe UI, Microsoft JhengHei, sans-serif" font-size="28" fill="#d4af37" font-weight="700">${label}</text>
-          <text x="50%" y="57%" text-anchor="middle" font-family="monospace" font-size="12" fill="#a7a7a7">IMAGE NOT FOUND</text>
-        </svg>`;
+    // --- 核心圖片找尋系統 ---
+    function makeDataUriPlaceholder(name) {
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="360"><rect width="100%" height="100%" fill="#0a0a0a"/><rect x="10" y="10" width="280" height="340" fill="none" stroke="#d4af37" stroke-width="2"/><text x="50%" y="50%" fill="#d4af37" font-family="Arial" font-size="24" text-anchor="middle">${name}</text><text x="50%" y="60%" fill="#ff3b3b" font-family="monospace" font-size="12" text-anchor="middle">ARCHIVE_MISSING</text></svg>`;
       return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
     }
 
-    function getCandidates(item) {
-      const root = LOCAL[state.game];
-      const normalized = item.files || [];
-      return normalized.map(function(f){ return root + f.split(" ").join("_").split("'").join(""); });
-    }
-
     function attachFallback(imgEl, item) {
-      const candidates = getCandidates(item);
-      let idx = 0;
-      const fallback = makeDataUriPlaceholder(item.name);
+      const fileName = item.files[0].replace(/ /g, "_");
+      const localPath = `${LOCAL[state.game]}${fileName}`;
+      const wikiUrl = state.game === "Lobotomy" 
+        ? null // Fandom 會擋連線
+        : `https://${state.game.toLowerCase()}company.wiki.gg/images/${fileName}`;
 
-      const tryNext = () => {
-        if (idx < candidates.length) {
-          imgEl.src = candidates[idx++];
-        } else {
-          imgEl.src = fallback;
-        }
-      };
+      const placeholder = makeDataUriPlaceholder(item.name);
+
+      // 步驟 1：先嘗試本地
+      imgEl.src = localPath;
 
       imgEl.onerror = () => {
-        imgEl.onerror = null;
-        tryNext();
-        imgEl.onerror = () => {
+        // 步驟 2：本地失敗，嘗試 Wiki.gg (如果是 Limbus/Ruina)
+        if (wikiUrl) {
+          imgEl.onerror = () => {
+            imgEl.onerror = null;
+            imgEl.src = placeholder; // 步驟 3：全都失敗，用 SVG
+          };
+          imgEl.src = wikiUrl;
+        } else {
           imgEl.onerror = null;
-          imgEl.src = fallback;
-        };
+          imgEl.src = placeholder;
+        }
       };
-
-      tryNext();
     }
 
-    function renderGameNav() {
-      const games = [
-        ["Limbus", "LIMBUS COMPANY"],
-        ["Ruina", "LIBRARY OF RUINA"],
-        ["Lobotomy", "LOBOTOMY CORP"]
-      ];
-      gameNav.innerHTML = "";
-      games.forEach(([id, label]) => {
-        const btn = document.createElement("button");
-        btn.className = `g-btn${state.game === id ? " active" : ""}`;
-        btn.textContent = label;
-        btn.onclick = () => switchGame(id);
-        gameNav.appendChild(btn);
-      });
-    }
-
-    function renderSubnav() {
-      subnav.innerHTML = "";
-      const cats = DB[state.game].cats;
-      const keys = Object.keys(cats);
-      if (!cats[state.cat]) state.cat = keys[0];
-      keys.forEach((key) => {
-        const btn = document.createElement("button");
-        btn.className = state.cat === key ? "active" : "";
-        btn.textContent = cats[key].label;
-        btn.onclick = () => { state.cat = key; render(); renderSubnav(); };
-        subnav.appendChild(btn);
-      });
-    }
-
-    function switchGame(id) {
-      state.game = id;
-      state.cat = Object.keys(DB[id].cats)[0];
-      renderGameNav();
-      renderSubnav();
+    // --- UI 渲染邏輯 ---
+    function switchGame(g) {
+      state.game = g;
+      state.cat = Object.keys(DB[g].cats)[0];
+      renderNav();
       render();
     }
 
-    function createCard(item) {
-      const card = document.createElement("article");
-      card.className = "card";
-      card.tabIndex = 0;
-      card.addEventListener("click", () => openModal(item));
-      card.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          openModal(item);
-        }
+    function renderNav() {
+      const gNav = document.getElementById("gameNav");
+      gNav.innerHTML = "";
+      ["Limbus", "Ruina", "Lobotomy"].forEach(g => {
+        const btn = document.createElement("button");
+        btn.innerText = g.toUpperCase();
+        if(state.game === g) btn.className = "active";
+        btn.onclick = () => switchGame(g);
+        gNav.appendChild(btn);
       });
 
-      const imgBox = document.createElement("div");
-      imgBox.className = "img-box";
-      const img = document.createElement("img");
-      img.loading = "lazy";
-      img.alt = item.name;
-      img.referrerPolicy = "no-referrer";
-      attachFallback(img, item);
-      imgBox.appendChild(img);
-
-      const info = document.createElement("div");
-      info.className = "card-info";
-      const small = document.createElement("small");
-      small.textContent = item.tag;
-      const h3 = document.createElement("h3");
-      h3.textContent = item.name;
-      const p = document.createElement("p");
-      p.textContent = item.intro;
-      info.append(small, h3, p);
-
-      card.append(imgBox, info);
-      return card;
+      const sNav = document.getElementById("subnav");
+      sNav.innerHTML = "";
+      Object.keys(DB[state.game].cats).forEach(c => {
+        const btn = document.createElement("button");
+        btn.innerText = DB[state.game].cats[c].label;
+        if(state.cat === c) btn.className = "active";
+        btn.onclick = () => { state.cat = c; renderNav(); render(); };
+        sNav.appendChild(btn);
+      });
     }
 
     function render() {
-      const q = search.value.trim().toLowerCase();
-      const items = DB[state.game].cats[state.cat].items.filter(item => {
-        return [item.name, item.tag, item.id, item.intro, item.bg, item.story].join(" ").toLowerCase().includes(q);
-      });
-
+      const grid = document.getElementById("dataGrid");
       grid.innerHTML = "";
-      items.forEach(item => grid.appendChild(createCard(item)));
-      emptyState.style.display = items.length ? "none" : "block";
-    }
+      DB[state.game].cats[state.cat].items.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.onclick = () => openModal(item);
+        
+        const img = document.createElement("img");
+        attachFallback(img, item);
 
-    function buildModalBody(item, tab) {
-      if (tab === "intro") {
-        return `
-          <div class="section">
-            <div class="meta">${item.tag}</div>
-            <h3>檔案介紹</h3>
-            <div>${item.intro}</div>
-          </div>
-        `;
-      }
-      if (tab === "bg") {
-        return `
-          <div class="section">
-            <div class="meta">背景資料</div>
-            <h3>背景故事</h3>
-            <div>${item.bg}</div>
-          </div>
-        `;
-      }
-      return `
-        <div class="section">
-          <div class="meta">章節紀錄</div>
-          <h3>敘事節點</h3>
-          <div>${item.story}</div>
-        </div>
-      `;
+        card.innerHTML = `<div class="img-box"></div><div class="card-info"><small>${item.tag}</small><h3>${item.name}</h3></div>`;
+        card.querySelector(".img-box").appendChild(img);
+        grid.appendChild(card);
+      });
     }
 
     function openModal(item) {
       state.item = item;
-      state.tab = "intro";
-      modalTitle.textContent = item.name;
-      modalTag.textContent = item.tag;
-      modalImg.alt = item.name;
-      modalImg.src = "";
-      attachFallback(modalImg, item);
-      modalBody.innerHTML = buildModalBody(item, state.tab);
-      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-      document.querySelector(".tab-btn").classList.add("active");
-      modal.classList.add("open");
-      modal.setAttribute("aria-hidden", "false");
+      document.getElementById("modalTitle").innerText = item.name;
+      document.getElementById("modalTag").innerText = item.tag;
+      attachFallback(document.getElementById("modalImg"), item);
+      setT('intro', document.querySelector(".tab-btn"));
+      document.getElementById("detailModal").classList.add("open");
       document.body.style.overflow = "hidden";
     }
 
     function closeM() {
-      modal.classList.remove("open");
-      modal.setAttribute("aria-hidden", "true");
+      document.getElementById("detailModal").classList.remove("open");
       document.body.style.overflow = "";
     }
 
-    function setT(type, btn) {
-      if (!state.item) return;
-      state.tab = type;
+    function setT(t, btn) {
       document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
-      modalBody.innerHTML = buildModalBody(state.item, type);
+      document.getElementById("modalBody").innerText = state.item[t];
     }
 
-    search.addEventListener("input", render);
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeM();
-    });
-    window.addEventListener("click", (e) => {
-      if (e.target === modal) closeM();
-    });
-
-    window.addEventListener("load", () => {
-      renderGameNav();
-      renderSubnav();
-      render();
-      setTimeout(() => document.getElementById("loading").classList.add("hide"), 600);
-    });
+    window.onload = () => {
+      switchGame("Limbus");
+      setTimeout(() => document.getElementById("loading").classList.add("hide"), 800);
+    };
   </script>
 </body>
 </html>
