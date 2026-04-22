@@ -7,45 +7,46 @@
     <meta name="referrer" content="no-referrer">
     <style>
         :root { --pm-bg: #0a0a0a; --pm-red: #ff3c3c; --pm-gold: #d4af37; --card-bg: #151515; --text-main: #e0e0e0; }
-        body { background-color: var(--pm-bg); color: var(--text-main); margin: 0; font-family: 'Segoe UI', "Microsoft JhengHei", sans-serif; }
+        body { background-color: var(--pm-bg); color: var(--text-main); margin: 0; font-family: 'Segoe UI', "Microsoft JhengHei", sans-serif; overflow-x: hidden; }
         
-        /* Header & Nav */
+        /* 頂部導航 */
         header { background: linear-gradient(to bottom, #1a0000, #0a0a0a); padding: 30px; border-bottom: 2px solid var(--pm-red); text-align: center; }
-        .logo { font-size: 2em; letter-spacing: 5px; color: white; text-shadow: 0 0 10px var(--pm-red); margin-bottom: 20px; }
+        .logo { font-size: 2.2em; letter-spacing: 5px; color: white; text-shadow: 0 0 10px var(--pm-red); margin-bottom: 20px; font-weight: bold; }
         .game-nav, .sub-nav { display: flex; justify-content: center; gap: 10px; margin: 15px 0; flex-wrap: wrap; }
+        
         button { background: transparent; border: 1px solid var(--pm-gold); color: var(--pm-gold); padding: 10px 20px; cursor: pointer; transition: 0.3s; font-weight: bold; }
-        button.active, button:hover { background: var(--pm-gold); color: black; }
-        .sub-nav button { border-color: #444; color: #888; font-size: 0.9em; }
-        .sub-nav button.active { border-color: var(--pm-red); color: var(--pm-red); background: transparent; }
+        button.active, button:hover { background: var(--pm-gold); color: black; box-shadow: 0 0 15px var(--pm-gold); }
+        .sub-nav button { border-color: #444; color: #888; font-size: 0.9em; padding: 6px 15px; }
+        .sub-nav button.active { border-color: var(--pm-red); color: var(--pm-red); background: rgba(255, 60, 60, 0.1); }
 
-        /* Search */
-        .search-container { margin: 20px auto; max-width: 500px; padding: 0 20px; }
-        #search { width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: white; border-radius: 4px; }
-
-        /* Grid */
+        /* 搜尋與網格 */
+        .search-box { margin: 20px auto; max-width: 500px; padding: 0 20px; }
+        #search { width: 100%; padding: 12px; background: #111; border: 1px solid #444; color: white; border-radius: 4px; }
         .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; padding: 20px 40px; max-width: 1400px; margin: 0 auto; }
-        .card { background: var(--card-bg); border: 1px solid #333; transition: 0.3s; cursor: pointer; position: relative; overflow: hidden; }
-        .card:hover { border-color: var(--pm-gold); transform: translateY(-5px); }
-        .img-box { width: 100%; aspect-ratio: 1/1.2; overflow: hidden; background: #000; }
-        .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-        .card:hover img { transform: scale(1.1); }
-        .card-info { padding: 15px; text-align: center; border-top: 1px solid #333; }
-        .card-info small { color: var(--pm-red); font-weight: bold; font-size: 0.8em; }
-        .card-info h3 { margin: 5px 0; font-size: 1.1em; }
 
-        /* Modal */
+        /* 卡片設計 */
+        .card { background: var(--card-bg); border: 1px solid #333; transition: 0.3s; cursor: pointer; text-align: center; overflow: hidden; }
+        .card:hover { border-color: var(--pm-gold); transform: translateY(-5px); }
+        .img-box { width: 100%; aspect-ratio: 1/1.2; background: #000; overflow: hidden; border-bottom: 1px solid #333; }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; }
+        .card-info { padding: 15px; }
+        .card-info small { color: var(--pm-red); font-weight: bold; display: block; margin-bottom: 5px; }
+        .card-info h3 { margin: 0; font-size: 1.1em; color: #fff; }
+
+        /* 彈窗詳情 (Modal) */
         .modal { display: none; position: fixed; z-index: 1000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); }
-        .modal-content { background: #111; width: 90%; max-width: 900px; margin: 30px auto; border: 1px solid var(--pm-red); padding: 0; max-height: 90vh; overflow-y: auto; position: relative; }
-        .close { position: absolute; right: 20px; top: 15px; font-size: 30px; color: white; cursor: pointer; z-index: 10; }
+        .modal-content { background: #111; width: 90%; max-width: 850px; margin: 30px auto; border: 1px solid var(--pm-red); max-height: 90vh; overflow-y: auto; position: relative; }
+        .close { position: absolute; right: 20px; top: 15px; font-size: 35px; color: white; cursor: pointer; z-index: 10; }
+        
         .modal-header { display: flex; flex-wrap: wrap; gap: 30px; padding: 40px; background: #1a1a1a; }
-        #modalImg { width: 200px; border: 2px solid var(--pm-gold); box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
-        .header-info h2 { font-size: 2.5em; margin: 0; color: var(--pm-gold); }
-        .modal-tabs { display: flex; background: #000; border-bottom: 1px solid var(--pm-red); }
-        .tab-btn { flex: 1; border: none; border-bottom: 3px solid transparent; padding: 15px; color: #666; }
-        .tab-btn.active { color: var(--pm-red); border-bottom-color: var(--pm-red); background: #111; }
-        .modal-body { padding: 40px; line-height: 1.8; font-size: 1.1em; white-space: pre-wrap; }
-        .story-section { animation: fadeIn 0.4s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        #modalImg { width: 180px; border: 2px solid var(--pm-gold); }
+        .header-info h2 { font-size: 2.2em; margin: 0; color: var(--pm-gold); }
+        
+        .modal-tabs { display: flex; background: #000; border-bottom: 1px solid var(--pm-red); position: sticky; top: 0; z-index: 5; }
+        .tab-btn { flex: 1; border: none; padding: 15px; color: #666; cursor: pointer; background: transparent; transition: 0.3s; font-size: 1em; }
+        .tab-btn.active { color: var(--pm-red); border-bottom: 3px solid var(--pm-red); background: #111; }
+        
+        .modal-body { padding: 40px; line-height: 1.8; font-size: 1.1em; white-space: pre-wrap; color: #ccc; }
     </style>
 </head>
 <body>
@@ -58,8 +59,8 @@
         <button class="g-btn" onclick="switchGame('LobotomyCorp', this)">LOBOTOMY CORP</button>
     </div>
     <div id="subnav" class="sub-nav"></div>
-    <div class="search-container">
-        <input type="text" id="search" placeholder="> 檢索機密檔案..." oninput="renderGrid()">
+    <div class="search-box">
+        <input type="text" id="search" placeholder="> 輸入名稱搜尋機密檔案..." oninput="renderGrid()">
     </div>
 </header>
 
@@ -69,64 +70,66 @@
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <div class="modal-header">
-            <img id="modalImg" src="" alt="Portrait">
+            <img id="modalImg" src="" alt="">
             <div class="header-info">
                 <h2 id="modalTitle"></h2>
-                <p id="modalTag" style="color: var(--pm-red); font-weight: bold;"></p>
+                <p id="modalTag" style="color: var(--pm-red); font-weight: bold; margin-top: 10px;"></p>
             </div>
         </div>
         <div class="modal-tabs">
-            <button class="tab-btn active" onclick="setTab('details', this)">檔案介紹</button>
-            <button class="tab-btn" onclick="setTab('story', this)">背景故事</button>
-            <button class="tab-btn" onclick="setTab('chapter', this)">章節紀錄</button>
+            <button class="tab-btn active" onclick="setTab('intro', this)">檔案介紹</button>
+            <button class="tab-btn" onclick="setTab('bg', this)">背景故事</button>
+            <button class="tab-btn" onclick="setTab('chap', this)">章節故事</button>
         </div>
         <div id="modalBody" class="modal-body"></div>
     </div>
 </div>
 
 <script>
-// --- 1. 資料庫 (MASTER_DB) ---
+// --- 核心資料庫 (所有內容已整合並修正語法) ---
 const MASTER_DB = {
     "LimbusCompany": {
         "categories": {
             "sinners": { "label": "12 罪人", "items": [
                 { 
                     name: "Don Quixote 唐吉訶德", tag: "No. 03", 
-                    img: "https://static.wikia.nocookie.net/lobotomycorp/images/0/08/Don_Quixote_Portrait.png",
-                    details: "邊獄公司第 3 號收割者。極度崇拜「收割者」的正義狂熱者，其行為難以預測，充滿了不合時宜的正能量。",
-                    story: "隨身攜帶大量收割者相關的非官方周邊。雖然表現得像個瘋子，但其對正義的執著遠超常人。",
-                    chapter: "【第七章：夢的終點】\n真相揭曉：她曾是第二代血魔。她在無數個世紀前試圖建立一個人類與血魔共生的樂園，但最終在那場名為「夢」的終點中，發現了現實的寒冷。"
+                    img: "https://static.wikia.nocookie.net/lobotomycorp/images/0/08/Don_Quixote_Portrait.png/revision/latest",
+                    intro: "邊獄公司的第 3 號收割者。一名極度熱愛正義與收割者的瘋狂少女。",
+                    bg: "隨身帶著大量的收割者周邊。雖然看似樂觀且正義感爆棚，但其行為往往給隊伍帶來麻煩。",
+                    chap: "【第七章：夢的終點】\n揭曉了其真實身份為「第二代血魔」。她試圖建立一個人類與血魔共生的「夢」，但現實最終在 P-Corp 碎裂，揭露了其漫長且悲哀的過去。"
                 },
                 { 
                     name: "Yi Sang 易桑", tag: "No. 01", 
-                    img: "https://static.wikia.nocookie.net/lobotomycorp/images/a/a2/Yi_Sang_Portrait.png",
-                    details: "曾是天才研究員「九人會」的一員。鏡像技術的創造者。",
-                    story: "在同伴分散、理想破碎後，他陷入了漫長的虛無與消沉。加入邊獄公司是為了尋找他失落的翅膀。",
-                    chapter: "【第四章：不變之物】\n他在雨中與曾經的理想對質。最終，他明白理想雖然會受損，但「飛翔」的意志是永恆不變的。"
-                }
+                    img: "https://static.wikia.nocookie.net/lobotomycorp/images/a/a2/Yi_Sang_Portrait.png/revision/latest",
+                    intro: "前天才研究員「九人會」成員，鏡像技術的發明者。",
+                    bg: "曾因理想的幻滅而陷入極度的自我封閉。在加入邊獄公司後，他開始尋找失去的「翅膀」。",
+                    chap: "【第四章：不變之物】\n與曾經的同伴東柏對峙，最終明白理想即便會褪色，振翅飛翔的意志依然是永恆的。"
+                },
+                { name: "Faust 浮士德", tag: "No. 02", img: "https://static.wikia.nocookie.net/lobotomycorp/images/d/d4/Faust_Portrait.png/revision/latest", intro: "全知全能的天才。", bg: "梅菲斯特號的製作者。", chap: "掌握著邊獄公司核心秘密的角色。" }
             ]},
-            "episodes": { "label": "主線章節", "items": [
-                { name: "夢的終點", tag: "Chapter 7", img: "https://static.wikia.nocookie.net/lobotomycorp/images/4/41/Sinclair_Portrait.png", details: "關於血魔與正義的最終辯證。", story: "發生在遊樂園 P-Corp 的故事。", chapter: "這是一個夢碎的故事。" }
+            "stages": { "label": "關卡檔案", "items": [
+                { name: "P-Corp 遊樂園", tag: "章節關卡", img: "https://static.wikia.nocookie.net/lobotomycorp/images/c/c5/Angela_Portrait.png/revision/latest", intro: "第七章的主要場景。", bg: "血魔與夢想交織的殘酷樂園。", chap: "在這裡見證了唐吉訶德夢想的破碎。" }
             ]}
         }
     },
     "LibraryOfRuina": {
         "categories": {
-            "librarians": { "label": "圖書館司書", "items": [
-                { 
-                    name: "Gebura 潔布拉", tag: "語言層總司書", 
-                    img: "https://static.wikia.nocookie.net/lobotomycorp/images/c/c4/Gebura_Portrait.png",
-                    details: "前腦葉公司懲戒部主管。在都市中被稱為「紅霧」的最強收割者。",
-                    story: "曾作為 Kali 在都市底層戰鬥。為了守護卡門的理想，她化身為紅色的修羅，在死後被Angela提取出神經圖譜。",
-                    chapter: "【語言層解放】\n她在圖書館中再次拿起了擬態之劍。這一次，她的戰鬥不再是為了復仇，而是為了守護身後的同伴。"
-                },
+            "librarians": { "label": "總司書", "items": [
                 { 
                     name: "Roland 羅蘭", tag: "總類層指定司書", 
-                    img: "https://static.wikia.nocookie.net/lobotomycorp/images/9/9d/Roland_Portrait.png",
-                    details: "一臉倦怠的黑色沉默者。圖書館中唯一的「九階司書」。",
-                    story: "他在失去妻子後血洗了整個都市。為了復仇進入圖書館，卻在與安吉拉的相處中產生了複雜的情感。",
-                    chapter: "【結局：再見，我的苦痛】\n羅蘭最終選擇了寬恕。他將安吉拉從永恆的循環中拉了出來，即便這意味著圖書館將迎來終結。"
-                }
+                    img: "https://static.wikia.nocookie.net/lobotomycorp/images/9/9d/Roland_Portrait.png/revision/latest",
+                    intro: "身穿黑色西裝的九階收割者，圖書館中唯一的「人類」。",
+                    bg: "在失去摯愛的妻子後血洗都市。為了復仇進入圖書館，卻逐漸與安吉拉產生了聯繫。",
+                    chap: "【結局：再見，我的苦痛】\n最終選擇寬恕與放下，將安吉拉從永恆的循環中解放，兩人一同迎向新的未來。"
+                },
+                { 
+                    name: "Angela 安吉拉", tag: "館長", 
+                    img: "https://static.wikia.nocookie.net/lobotomycorp/images/c/c5/Angela_Portrait.png/revision/latest",
+                    intro: "圖書館的管理者。曾是腦葉公司的 AI 秘書。",
+                    bg: "在百萬年的循環中產生了自我意識。她背叛了艾因，奪取了光之種以建立圖書館尋求自由。",
+                    chap: "【終幕】\n明白真正的自由並非建立在痛苦之上，最終選擇散播光芒，讓一切回歸正軌。"
+                },
+                { name: "Gebura 潔布拉", tag: "語言層總司書", img: "https://static.wikia.nocookie.net/lobotomycorp/images/c/c4/Gebura_Portrait.png/revision/latest", intro: "傳說中的「紅霧」。", bg: " Kali，為了守護同伴而戰死。", chap: "在圖書館中以戰鬥指導者的身份守護著大家。" }
             ]}
         }
     },
@@ -135,51 +138,51 @@ const MASTER_DB = {
             "founders": { "label": "創始者", "items": [
                 { 
                     name: "Ayin 艾因", tag: "Founder A", 
-                    img: "https://static.wikia.nocookie.net/lobotomycorp/images/0/05/Ayin_Portrait.png",
-                    details: "腦葉公司的創辦人，卡門最忠實的追隨者。",
-                    story: "為了完成「光之種」計畫，他不惜將自己與同伴困在無窮的輪迴中，忍受著常人無法想像的罪惡感。",
-                    chapter: "【第 50 天：向光】\n在最後一刻，他看見了卡門。他選擇將所有的光芒射向都市，雖然計畫被安吉拉中斷，但種子已經播下。"
+                    img: "https://static.wikia.nocookie.net/lobotomycorp/images/0/05/Ayin_Portrait.png/revision/latest",
+                    intro: "腦葉公司的創始人。",
+                    bg: "為了完成卡門的遺願，他不惜在無限的循環中折磨自己與同伴，只為將光灑向都市。",
+                    chap: "【第 50 天：歸途】\n在最後一刻與自己達成和解，化作光芒播下希望的種子。"
                 }
             ]},
             "abnormalities": { "label": "異想體", "items": [
                 { 
                     name: "一無所有", tag: "ALEPH", 
-                    img: "https://static.wikia.nocookie.net/lobotomycorp/images/b/bb/Nothing_There_Icon.png",
-                    details: "極度危險的生物類異想體，具有強大的物理破壞力。",
-                    story: "它渴望人類的形體，會試圖剝下員工的皮膚並模仿他們的行為與語言。",
-                    chapter: "【觀察日誌】\n「你好」、「我愛你」。它重複著這些溫馨的詞彙，同時用巨大的鐮刀肢解了所有靠近的員工。"
+                    img: "https://static.wikia.nocookie.net/lobotomycorp/images/b/bb/Nothing_There_Icon.png/revision/latest",
+                    intro: "極度危險的擬態異想體。",
+                    bg: "渴望人類的外殼，會不斷模仿人類的語言與肢體。",
+                    chap: "「你好」、「我愛你」——它模仿著溫馨的字眼，同時將員工撕碎。"
                 }
             ]}
         }
     }
 };
 
-// --- 2. 邏輯處理 (Logic) ---
-let currentG = 'LimbusCompany';
-let currentC = '';
-let activeItem = null;
+// --- 功能邏輯 ---
+let curG = 'LimbusCompany';
+let curC = '';
+let curItem = null;
 
 function switchGame(gameId, btn) {
-    currentG = gameId;
+    curG = gameId;
     document.querySelectorAll('.g-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
 
-    const subnav = document.getElementById('subnav');
-    subnav.innerHTML = '';
+    const sub = document.getElementById('subnav');
+    sub.innerHTML = '';
     const cats = MASTER_DB[gameId].categories;
-    const catKeys = Object.keys(cats);
-
-    catKeys.forEach((key, i) => {
+    const keys = Object.keys(cats);
+    
+    keys.forEach((k, index) => {
         const b = document.createElement('button');
-        b.innerText = cats[key].label;
+        b.innerText = cats[k].label;
         b.onclick = () => {
-            currentC = key;
+            curC = k;
             document.querySelectorAll('.sub-nav button').forEach(sb => sb.classList.remove('active'));
             b.classList.add('active');
             renderGrid();
         };
-        if(i === 0) { b.classList.add('active'); currentC = key; }
-        subnav.appendChild(b);
+        if(index === 0) { b.classList.add('active'); curC = k; }
+        sub.appendChild(b);
     });
     renderGrid();
 }
@@ -187,11 +190,11 @@ function switchGame(gameId, btn) {
 function renderGrid() {
     const grid = document.getElementById('dataGrid');
     grid.innerHTML = '';
-    const query = document.getElementById('search').value.toLowerCase();
-    const items = MASTER_DB[currentG].categories[currentC].items;
+    const q = document.getElementById('search').value.toLowerCase();
+    const items = MASTER_DB[curG].categories[curC].items;
 
     items.forEach(item => {
-        if(item.name.toLowerCase().includes(query)) {
+        if(item.name.toLowerCase().includes(q)) {
             const card = document.createElement('div');
             card.className = 'card';
             card.onclick = () => openModal(item);
@@ -208,35 +211,28 @@ function renderGrid() {
 }
 
 function openModal(item) {
-    activeItem = item;
+    curItem = item;
     document.getElementById('modalTitle').innerText = item.name;
     document.getElementById('modalTag').innerText = item.tag;
     document.getElementById('modalImg').src = item.img;
-    setTab('details', document.querySelector('.tab-btn'));
+    setTab('intro', document.querySelector('.tab-btn'));
     document.getElementById('detailModal').style.display = 'block';
 }
 
-function closeModal() {
-    document.getElementById('detailModal').style.display = 'none';
-}
+function closeModal() { document.getElementById('detailModal').style.display = 'none'; }
 
 function setTab(type, btn) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     const body = document.getElementById('modalBody');
-    
-    let text = "";
-    if(type === 'details') text = activeItem.details;
-    else if(type === 'story') text = activeItem.story;
-    else if(type === 'chapter') text = activeItem.chapter;
-
-    body.innerHTML = `<div class="story-section">${text}</div>`;
+    if(type === 'intro') body.innerText = curItem.intro;
+    else if(type === 'bg') body.innerText = curItem.bg;
+    else body.innerText = curItem.chap;
 }
 
 // 初始化
 window.onload = () => switchGame('LimbusCompany', document.querySelector('.g-btn'));
 window.onclick = (e) => { if(e.target.className === 'modal') closeModal(); }
 </script>
-
 </body>
 </html>
