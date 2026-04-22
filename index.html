@@ -287,5 +287,13 @@
       setTimeout(() => document.getElementById("loading").classList.add("hide"), 800);
     };
   </script>
+  <div id="music-notification" class="music-note"></div>
+<div id="music-control-btn" onclick="togglePlaylist()">🎵</div>
+<div id="playlist-window">
+    <div style="padding:15px; border-bottom:1px solid #333; font-weight:bold; color:var(--pm-gold);">檔案庫音軌設定</div>
+    <div id="playlist-content"></div>
+</div>
+<div id="youtube-player" style="display:none;"></div>
+<script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
