@@ -127,33 +127,58 @@
       Limbus: {
         cats: {
           core: { label: "核心人員", items: [
-            { name: "Dante 但丁", tag: "Manager", files: ["Dante.png"], intro: "邊獄公司的管理者。", bg: "頭部為時鐘的神秘存在。", story: "負責回溯罪人的時間。" },
-            { name: "Vergilius 維吉里烏斯", tag: "Guide", files: ["Vergilius.png"], intro: "罪人們的引導者。", bg: "被稱為『漆黑沉默』之後的最強者之一。", story: "負責監督 LCB 部門。" }
+            { id: "D", name: "Dante 但丁", tag: "Manager / LCB", intro: "邊獄公司的管理者，也是多項認知技術的載體。", bg: "以時鐘作為其具象化的認知介面。", story: "在循環中與罪人建立共感。" },
+            { id: "V", name: "Vergilius 維吉里烏斯", tag: "Guide / LCB", intro: "Limbus Company 的引導者。", bg: "曾被稱為最不穩定的收割者之一。", story: "以冷徹的理性監控著計畫。" }
           ]},
           sinners: { label: "12 罪人", items: [
-            { name: "Yi Sang 易桑", tag: "No. 01", files: ["Yi Sang Portrait.png"], intro: "前天才研究員。", bg: "他在破碎的理想中觀測羽翼。", story: "第四章核心人物。" },
-            { name: "Don Quixote 唐吉訶德", tag: "No. 03", files: ["Don Quixote Portrait.png"], intro: "熱衷正義的少女。", bg: "其執念深不可測。", story: "第七章直面其血色本質。" }
+            { id: "01", name: "Yi Sang 易桑", tag: "No. 01 / LCB", intro: "前天才研究員。", bg: "在破碎中觀測理想。", story: "第四章明白『飛翔』的不變意志。" },
+            { id: "02", name: "Faust 浮士德", tag: "No. 02 / LCB", intro: "全知全能的天才。", bg: "掌握都市秘密的核心。", story: "待檢索。" },
+            { id: "03", name: "Don Quixote 唐吉訶德", tag: "No. 03 / LCB", intro: "熱衷正義的少女。", bg: "其熱忱背後是認知的錯位。", story: "第七章直面『夢的終點』。" },
+            { id: "04", name: "Ryoshu 龍州", tag: "No. 04 / LCB", intro: "極致的藝術家。", bg: "以刀刃作畫。", story: "待檢索。" },
+            { id: "05", name: "Meursault 梅爾索", tag: "No. 05 / LCB", intro: "理性執行者。", bg: "遵循程序與指令。", story: "待檢索。" },
+            { id: "06", name: "Hong Lu 洪路", tag: "No. 06 / LCB", intro: "天真的大少爺。", bg: "家族背景複雜。", story: "待檢索。" },
+            { id: "07", name: "Heathcliff 希斯克里夫", tag: "No. 07 / LCB", intro: "暴躁的戰鬥員。", bg: "呼嘯山莊的悲劇。", story: "第六章是其核心故事。" },
+            { id: "08", name: "Ishmael 以實瑪利", tag: "No. 08 / LCB", intro: "前海員。", bg: "追逐著那頭白鯨。", story: "第五章是其核心故事。" },
+            { id: "09", name: "Rodion 羅德昂", tag: "No. 09 / LCB", intro: "熱情的豪放女子。", bg: "罪與罰的回憶糾纏。", story: "待檢索。" },
+            { id: "10", name: "Sinclair 辛克萊", tag: "No. 10 / LCB", intro: "懦弱但潛力巨大的少年。", bg: "家庭被屠殺的創傷。", story: "第三章核心人物。" },
+            { id: "11", name: "Outis 奧緹斯", tag: "No. 11 / LCB", intro: "幹練的軍官。", bg: "極度忠誠且効率。", story: "待檢索。" },
+            { id: "12", name: "Gregor 葛列格爾", tag: "No. 12 / LCB", intro: "老兵。", bg: "手臂異變為蟲。", story: "第一章核心人物。" }
           ]}
         }
       },
       Ruina: {
         cats: {
-          librarians: { label: "圖書館司書", items: [
-            { name: "Roland 羅蘭", tag: "總類層", files: ["Roland Portrait.png"], intro: "隱藏身分的觀察者。", bg: "為了復仇而進入圖書館。", story: "與安吉拉共同完成了書的故事。" },
-            { name: "Gebura 潔布拉", tag: "語言層", items: [], files: ["Gebura Portrait.png"], intro: "最強的紅霧。", bg: "前懲戒部主管。", story: "負責守護語言層。" }
+          librarians: { label: "總司書", items: [
+            { id: "Roland", name: "Roland 羅蘭", tag: "總類層", intro: "黑色沉默的男人。", bg: "在都市中製造了無數血案的人類。", story: "最終選擇寬恕安吉拉。" },
+            { id: "Angela", name: "Angela 安吉拉", tag: "館長", intro: "圖書館的管理者。", bg: "在百萬年數據中產生了自由的推測。", story: "結局時將光播灑向都市。" },
+            { id: "Gebura", name: "Gebura 潔布拉", tag: "語言層", intro: "傳說中的紅霧。", bg: "前懲戒部主管，力量的具象化。", story: "在圖書館找回了戰鬥的初衷。" }
+          ]},
+          enemies: { label: "都市敵人", items: [
+            { id: "Argalia", name: "Argalia 阿爾加利亞", tag: "漆黑沉默", intro: "扭曲的劍客。", bg: "以音樂作為其殺戮的美學。", story: "終焉演奏會的指揮者。" }
           ]}
         }
       },
       Lobotomy: {
         cats: {
           founders: { label: "創始者與 AI", items: [
-            { name: "Ayin 艾因", tag: "A", files: ["Ayin Portrait.png"], intro: "計畫執行者。", bg: "在無限循環中推測機率。", story: "歸於光芒之中。" },
-            { name: "Angela 安吉拉", tag: "AI / Founder", files: ["Angela Portrait.png"], intro: "被賦予認知的機器。", bg: "在百萬年數據中覺醒。", story: "建立了圖書館。" }
+            { id: "Ayin", name: "Ayin 艾因", tag: "A", intro: "腦葉公司的奠基人。", bg: "計畫推動者，將自我完全耗盡。", story: "第 50 天歸途。" },
+            { id: "Carmen", name: "Carmen 卡門", tag: "C", intro: "最初的理想與計畫起源。", bg: "死於對集體認知的早期實驗。", story: "化作光之幽靈，引導著扭曲。" },
+            { id: "Angela", name: "Angela 安吉拉", tag: "AI / Founder", intro: "公司的秘書 AI。", bg: "在漫長循環中覺醒的機器意志。", story: "從被設計的工具轉化為選擇者。" }
+          ]},
+          sephirah: { label: "部門主管", items: [
+            { id: "Malkuth", name: "Malkuth", tag: "控制部主管", intro: "第一部門Sephirah。", bg: "情緒豐富且講究效率。", story: "代表控制與壓制。" },
+            { id: "Yesod", name: "Yesod", tag: "情報部主管", intro: "規則導向管理者。", bg: "注重系統效率與結構。", story: "將流程極大化。" },
+            { id: "Hod", name: "Hod", tag: "培訓部主管", intro: "善於理解與照顧他人。", bg: "為情感與秩序提供緩衝。", story: "在修復中尋求自我確認。" },
+            { id: "Binah", name: "Binah", tag: "研發部主管", intro: "冷冽且接近真相。", bg: "掌握了最深層的認知機密。", story: "待檢索。" }
+          ]},
+          abnormalities: { label: "異想體", items: [
+            { id: "Nothing There", name: "一無所有", tag: "ALEPH", intro: "擬態異想體。", bg: "渴望人類的外殼與愛。", story: "「你好」——它重複著這句話，尋找下一個外殼。" }
           ]}
         }
       }
     };
 
+      
     let state = { game: "Limbus", cat: "core", item: null, keyword: "" };
 
     function makePlaceholder(name) {
