@@ -13,51 +13,56 @@
     let currentTrackIndex = 0;
     let targetVolume = 50;
 
-    // --- 1. CSS 注入：光暈與照亮效果 ---
+    // --- 1. CSS 強化：加入聚焦與光擴散過渡 ---
     const style = document.createElement('style');
     style.innerHTML = `
         #seed-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 20000;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: background 2s ease;
+            transition: background 1.5s ease, opacity 2.5s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: all;
         }
         
-        /* 核心光之種 */
         .seed-of-light {
             width: 80px; height: 80px;
             background: #fff;
             border-radius: 50%;
-            box-shadow: 0 0 40px #fff, 0 0 80px #d4af37, 0 0 120px #d4af37;
+            box-shadow: 0 0 40px #fff, 0 0 80px #d4af37;
             cursor: pointer;
-            animation: pulse-glow 3s infinite;
             z-index: 20001;
-            transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1), opacity 1s ease;
         }
 
-        /* 照亮動畫：光芒炸開 */
+        /* 照亮狀態：白光層 */
         #seed-overlay.illuminated {
-            background: #fff !important; /* 瞬間變白，像被照亮 */
-            transition: background 1.5s ease;
+            background: #fff !important;
         }
 
+        /* 核心：光球炸開並變淡 */
         .seed-of-light.expand {
-            transform: scale(50); /* 炸開覆蓋螢幕 */
+            transform: scale(100);
             opacity: 0;
         }
 
+        /* 文字淡出 */
         .seed-text {
             margin-top: 30px; color: #d4af37; font-family: "serif";
             letter-spacing: 8px; font-size: 12px; opacity: 0.5;
-            transition: opacity 1s ease;
+            transition: opacity 0.8s ease;
         }
 
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 40px #fff, 0 0 80px #d4af37; transform: scale(1); }
-            50% { box-shadow: 0 0 60px #fff, 0 0 120px #d4af37; transform: scale(1.05); }
+        /* 網頁聚焦：給 body 加一個過渡 */
+        body.focus-in {
+            animation: web-focus 3s forwards;
         }
 
-        /* 音樂 UI 保持一致 */
+        @keyframes web-focus {
+            from { filter: blur(10px) brightness(2); transform: scale(0.98); }
+            to { filter: blur(0px) brightness(1); transform: scale(1); }
+        }
+
+        /* UI 介面 */
         .music-note { position: fixed; bottom: 85px; right: 20px; background: rgba(0,0,0,0.9); border-left: 4px solid #ff3b3b; padding: 12px 20px; border-radius: 8px; color: white; font-size: 14px; z-index: 9999; transform: translateX(150%); transition: 0.5s; pointer-events: none; }
         .music-note.show { transform: translateX(0); }
         #music-control-btn { position: fixed; bottom: 20px; right: 20px; width: 55px; height: 55px; background: #151515; border: 1px solid #d4af37; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 9999; font-size: 22px; }
@@ -68,12 +73,12 @@
     `;
     document.head.appendChild(style);
 
-    // --- 2. 注入 HTML ---
+    // --- 2. HTML 結構 ---
     const container = document.createElement('div');
     container.innerHTML = `
         <div id="seed-overlay">
             <div class="seed-of-light" id="start-btn"></div>
-            <div class="seed-text">ILLUMINATE THE ARCHIVE</div>
+            <div class="seed-text">SEED OF LIGHT</div>
         </div>
         <div id="music-notification" class="music-note"></div>
         <div id="music-control-btn">🎵</div>
@@ -85,19 +90,18 @@
     `;
     document.body.appendChild(container);
 
-    // --- 3. YouTube API 控制 ---
+    // --- 3. YouTube API ---
     const tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     document.head.appendChild(tag);
 
     window.onYouTubeIframeAPIReady = function() {
         player = new YT.Player('youtube-player', {
-            height: '0', width: '0',
-            videoId: tracks[currentTrackIndex].id,
+            height: '0', width: '0', videoId: tracks[currentTrackIndex].id,
             playerVars: { 'autoplay': 0, 'controls': 0 },
             events: { 
                 'onReady': () => {
-                    document.getElementById('start-btn').onclick = illuminateRitual;
+                    document.getElementById('start-btn').onclick = startFocusRitual;
                     initUI();
                 },
                 'onStateChange': (e) => { if (e.data == YT.PlayerState.ENDED) nextTrack(); }
@@ -105,7 +109,6 @@
         });
     };
 
-    // 音量平滑過渡
     function transitionVolume(start, end, duration) {
         const startTime = performance.now();
         function update() {
@@ -117,32 +120,40 @@
         requestAnimationFrame(update);
     }
 
-    // --- 核心：照亮儀式 ---
-    function illuminateRitual() {
+    // --- 4. 關鍵核心：從光芒到網頁的絲滑聚焦 ---
+    function startFocusRitual() {
         const btn = document.getElementById('start-btn');
         const overlay = document.getElementById('seed-overlay');
         const text = document.querySelector('.seed-text');
 
-        // 音樂淡入
+        // 啟動音樂與淡入
         player.playVideo();
         transitionVolume(0, targetVolume, 3000);
 
-        // 視覺：先讓光芒膨脹，然後背景變白
+        // A. 光球膨脹
         btn.classList.add('expand');
         text.style.opacity = '0';
         
+        // B. 變白瞬間
         setTimeout(() => {
-            overlay.classList.add('illuminated'); // 背景變白
-            setTimeout(() => {
-                overlay.style.opacity = '0'; // 整個白色層淡出，顯現網頁
-                setTimeout(() => overlay.remove(), 2000);
-            }, 500);
-        }, 1000);
+            overlay.classList.add('illuminated');
+            
+            // C. 啟動網頁聚焦動畫 (Blur + Brightness 過渡)
+            document.body.classList.add('focus-in');
 
-        setTimeout(() => showNotice(tracks[currentTrackIndex].name), 2500);
+            // D. 白色層慢慢變透明消失
+            setTimeout(() => {
+                overlay.style.opacity = '0'; 
+                setTimeout(() => {
+                    overlay.remove();
+                }, 2500);
+            }, 300);
+        }, 1200);
+
+        setTimeout(() => showNotice(tracks[currentTrackIndex].name), 3000);
     }
 
-    // --- 清單邏輯 ---
+    // --- 其他邏輯 ---
     function initUI() {
         document.getElementById('music-control-btn').onclick = () => document.getElementById('playlist-window').classList.toggle('open');
         const content = document.getElementById('playlist-content');
@@ -167,10 +178,7 @@
         document.getElementById('playlist-window').classList.remove('open');
     }
 
-    function nextTrack() {
-        playTrack((currentTrackIndex + 1) % tracks.length);
-    }
-
+    function nextTrack() { playTrack((currentTrackIndex + 1) % tracks.length); }
     function showNotice(name) {
         const note = document.getElementById('music-notification');
         note.innerHTML = `<div style="font-size:10px; color:#888;">Now Playing</div><b>${name}</b>`;
