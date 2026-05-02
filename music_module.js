@@ -13,37 +13,51 @@
     let currentTrackIndex = 0;
     let targetVolume = 50;
 
-    // --- CSS 注入 (燃燒特效與介面) ---
+    // --- 1. CSS 注入：光暈與照亮效果 ---
     const style = document.createElement('style');
     style.innerHTML = `
         #seed-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 20000;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            -webkit-mask-image: radial-gradient(circle, transparent 0%, black 0%);
-            mask-image: radial-gradient(circle, transparent 0%, black 0%);
-            transition: opacity 3s ease;
+            transition: background 2s ease;
         }
-        #seed-overlay.burning {
-            animation: burn-sequence 4s forwards ease-in;
-            pointer-events: none;
-        }
-        @keyframes burn-sequence {
-            0% { -webkit-mask-image: radial-gradient(circle, transparent 0%, black 10%); }
-            50% { -webkit-mask-image: radial-gradient(circle, transparent 40%, black 60%); filter: brightness(1.3) contrast(1.2) sepia(0.3); }
-            100% { -webkit-mask-image: radial-gradient(circle, transparent 150%, black 150%); opacity: 0; }
-        }
+        
+        /* 核心光之種 */
         .seed-of-light {
-            width: 90px; height: 90px;
-            background: radial-gradient(circle, #fff 10%, #ffcc00 40%, transparent 70%);
-            border-radius: 50%; box-shadow: 0 0 50px #ffaa00;
-            cursor: pointer; animation: pulse 2s infinite; transition: 0.8s;
+            width: 80px; height: 80px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 40px #fff, 0 0 80px #d4af37, 0 0 120px #d4af37;
+            cursor: pointer;
+            animation: pulse-glow 3s infinite;
+            z-index: 20001;
+            transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .seed-of-light.ignited { transform: scale(3); opacity: 0; filter: blur(20px); }
-        .seed-text { margin-top: 25px; color: #d4af37; font-family: serif; letter-spacing: 5px; opacity: 0.6; transition: 0.5s; }
-        @keyframes pulse { 0% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 0.7; } }
 
-        /* UI 樣式 */
+        /* 照亮動畫：光芒炸開 */
+        #seed-overlay.illuminated {
+            background: #fff !important; /* 瞬間變白，像被照亮 */
+            transition: background 1.5s ease;
+        }
+
+        .seed-of-light.expand {
+            transform: scale(50); /* 炸開覆蓋螢幕 */
+            opacity: 0;
+        }
+
+        .seed-text {
+            margin-top: 30px; color: #d4af37; font-family: "serif";
+            letter-spacing: 8px; font-size: 12px; opacity: 0.5;
+            transition: opacity 1s ease;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 40px #fff, 0 0 80px #d4af37; transform: scale(1); }
+            50% { box-shadow: 0 0 60px #fff, 0 0 120px #d4af37; transform: scale(1.05); }
+        }
+
+        /* 音樂 UI 保持一致 */
         .music-note { position: fixed; bottom: 85px; right: 20px; background: rgba(0,0,0,0.9); border-left: 4px solid #ff3b3b; padding: 12px 20px; border-radius: 8px; color: white; font-size: 14px; z-index: 9999; transform: translateX(150%); transition: 0.5s; pointer-events: none; }
         .music-note.show { transform: translateX(0); }
         #music-control-btn { position: fixed; bottom: 20px; right: 20px; width: 55px; height: 55px; background: #151515; border: 1px solid #d4af37; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 9999; font-size: 22px; }
@@ -54,12 +68,12 @@
     `;
     document.head.appendChild(style);
 
-    // --- HTML 注入 ---
+    // --- 2. 注入 HTML ---
     const container = document.createElement('div');
     container.innerHTML = `
         <div id="seed-overlay">
             <div class="seed-of-light" id="start-btn"></div>
-            <div class="seed-text">CLICK TO COALESCE</div>
+            <div class="seed-text">ILLUMINATE THE ARCHIVE</div>
         </div>
         <div id="music-notification" class="music-note"></div>
         <div id="music-control-btn">🎵</div>
@@ -67,11 +81,11 @@
             <div style="padding:15px; color:#d4af37; font-weight:bold; border-bottom:1px solid #333; font-size:12px;">LIBRARY AUDIO</div>
             <div id="playlist-content"></div>
         </div>
-        <div id="youtube-player" style="position:absolute; top:-1000px;"></div>
+        <div id="youtube-player" style="position:fixed; top:-1000px;"></div>
     `;
     document.body.appendChild(container);
 
-    // --- YouTube API 控制 ---
+    // --- 3. YouTube API 控制 ---
     const tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     document.head.appendChild(tag);
@@ -80,65 +94,55 @@
         player = new YT.Player('youtube-player', {
             height: '0', width: '0',
             videoId: tracks[currentTrackIndex].id,
-            playerVars: { 'autoplay': 0, 'controls': 0, 'enablejsapi': 1 },
+            playerVars: { 'autoplay': 0, 'controls': 0 },
             events: { 
                 'onReady': () => {
+                    document.getElementById('start-btn').onclick = illuminateRitual;
                     initUI();
-                    document.getElementById('start-btn').onclick = startRitual;
                 },
                 'onStateChange': (e) => { if (e.data == YT.PlayerState.ENDED) nextTrack(); }
             }
         });
     };
 
-    // --- 平滑音量過渡引擎 ---
+    // 音量平滑過渡
     function transitionVolume(start, end, duration) {
         const startTime = performance.now();
         function update() {
             const elapsed = performance.now() - startTime;
             const progress = Math.min(elapsed / duration, 1);
-            const currentVol = start + (end - start) * progress;
-            player.setVolume(currentVol);
+            player.setVolume(start + (end - start) * progress);
             if (progress < 1) requestAnimationFrame(update);
         }
         requestAnimationFrame(update);
     }
 
-    function startRitual() {
-        const startBtn = document.getElementById('start-btn');
+    // --- 核心：照亮儀式 ---
+    function illuminateRitual() {
+        const btn = document.getElementById('start-btn');
         const overlay = document.getElementById('seed-overlay');
         const text = document.querySelector('.seed-text');
 
         // 音樂淡入
         player.playVideo();
-        transitionVolume(0, targetVolume, 2500);
+        transitionVolume(0, targetVolume, 3000);
 
-        // 視覺動畫
-        startBtn.classList.add('ignited');
+        // 視覺：先讓光芒膨脹，然後背景變白
+        btn.classList.add('expand');
         text.style.opacity = '0';
-        overlay.classList.add('burning');
-
-        setTimeout(() => showNotice(tracks[currentTrackIndex].name), 1500);
-        setTimeout(() => overlay.remove(), 4500);
-    }
-
-    function playTrack(i) {
-        // 切換歌曲時：先淡出 -> 換歌 -> 再淡入
-        transitionVolume(targetVolume, 0, 800);
         
         setTimeout(() => {
-            currentTrackIndex = i;
-            player.loadVideoById(tracks[i].id);
-            transitionVolume(0, targetVolume, 1200);
-            
-            document.querySelectorAll('.track-item').forEach((el, idx) => el.classList.toggle('active', idx === i));
-            showNotice(tracks[i].name);
-        }, 850);
-        
-        document.getElementById('playlist-window').classList.remove('open');
+            overlay.classList.add('illuminated'); // 背景變白
+            setTimeout(() => {
+                overlay.style.opacity = '0'; // 整個白色層淡出，顯現網頁
+                setTimeout(() => overlay.remove(), 2000);
+            }, 500);
+        }, 1000);
+
+        setTimeout(() => showNotice(tracks[currentTrackIndex].name), 2500);
     }
 
-    // 其他 UI 控制
+    // --- 清單邏輯 ---
     function initUI() {
         document.getElementById('music-control-btn').onclick = () => document.getElementById('playlist-window').classList.toggle('open');
         const content = document.getElementById('playlist-content');
@@ -151,9 +155,20 @@
         });
     }
 
+    function playTrack(i) {
+        transitionVolume(targetVolume, 0, 800);
+        setTimeout(() => {
+            currentTrackIndex = i;
+            player.loadVideoById(tracks[i].id);
+            transitionVolume(0, targetVolume, 1200);
+            document.querySelectorAll('.track-item').forEach((el, idx) => el.classList.toggle('active', idx === i));
+            showNotice(tracks[i].name);
+        }, 850);
+        document.getElementById('playlist-window').classList.remove('open');
+    }
+
     function nextTrack() {
-        let nextIdx = (currentTrackIndex + 1) % tracks.length;
-        playTrack(nextIdx);
+        playTrack((currentTrackIndex + 1) % tracks.length);
     }
 
     function showNotice(name) {
