@@ -11,7 +11,7 @@
 
     let player;
     let currentTrackIndex = 0;
-    let hasInteracted = false; // 標記是否已解鎖
+    let isUnmuted = false;
 
     // --- 自動注入 CSS ---
     const style = document.createElement('style');
@@ -54,43 +54,44 @@
         player = new YT.Player('youtube-player', {
             height: '0', width: '0',
             videoId: tracks[currentTrackIndex].id,
-            playerVars: { 'autoplay': 1, 'controls': 0 },
+            playerVars: { 
+                'autoplay': 1, 
+                'mute': 1, // 先靜音播放，這是為了騙過瀏覽器的限制
+                'controls': 0 
+            },
             events: {
-                'onReady': () => { 
+                'onReady': (e) => { 
                     initUI(); 
-                    setupAutoplayTrigger(); // 啟動滑鼠偵測
+                    e.target.playVideo(); // 嘗試開始播放 (靜音)
+                    setupUnmuteTrigger(); // 監聽玩家動作來取消靜音
                 },
                 'onStateChange': (e) => { if (e.data == YT.PlayerState.ENDED) nextTrack(); }
             }
         });
     };
 
-    // --- 關鍵核心：滑鼠移動觸發播放 ---
-    function setupAutoplayTrigger() {
-        const unlock = () => {
-            if (hasInteracted) return;
+    // --- 核心：偵測動作並恢復音量 ---
+    function setupUnmuteTrigger() {
+        const unmute = () => {
+            if (isUnmuted) return;
+            player.unMute(); // 取消靜音
+            player.setVolume(50); // 設定音量
+            player.playVideo(); // 確保是在播放狀態
+            isUnmuted = true;
+            showNotice(tracks[currentTrackIndex].name);
             
-            // 嘗試播放
-            player.playVideo();
-            
-            // 檢查是否播放成功 (如果播放器狀態變成 1 或 3，代表解鎖成功)
-            const state = player.getPlayerState();
-            if (state === 1 || state === 3 || state === -1) {
-                // 只要沒報錯，我們就視為嘗試過
-                hasInteracted = true;
-                showNotice(tracks[currentTrackIndex].name);
-                
-                // 移除監聽器，節省效能
-                window.removeEventListener('mousemove', unlock);
-                window.removeEventListener('mousedown', unlock);
-                window.removeEventListener('keydown', unlock);
-            }
+            // 成功解鎖後移除監聽器
+            window.removeEventListener('click', unmute);
+            window.removeEventListener('scroll', unmute);
+            window.removeEventListener('keydown', unmute);
+            window.removeEventListener('touchstart', unmute);
         };
 
-        // 監聽多種行為來確保最高成功率
-        window.addEventListener('mousemove', unlock);
-        window.addEventListener('mousedown', unlock);
-        window.addEventListener('keydown', unlock);
+        // 監聽更多有效動作 (點擊、滾動、按鍵)
+        window.addEventListener('click', unmute);
+        window.addEventListener('scroll', unmute);
+        window.addEventListener('keydown', unmute);
+        window.addEventListener('touchstart', unmute);
     }
 
     function initUI() {
@@ -104,7 +105,11 @@
             const item = document.createElement('div');
             item.className = `track-item ${i === currentTrackIndex ? 'active' : ''}`;
             item.innerText = `${i + 1}. ${t.name}`;
-            item.onclick = (e) => { e.stopPropagation(); playTrack(i); };
+            item.onclick = (e) => { 
+                e.stopPropagation(); 
+                isUnmuted = true; // 手動點擊清單時也視為解鎖
+                playTrack(i); 
+            };
             content.appendChild(item);
         });
     }
@@ -112,6 +117,7 @@
     function playTrack(i) {
         currentTrackIndex = i;
         player.loadVideoById(tracks[i].id);
+        player.unMute(); // 確保有聲音
         
         document.querySelectorAll('.track-item').forEach((el, idx) => {
             el.classList.toggle('active', idx === i);
@@ -136,7 +142,7 @@
     window.addEventListener('click', (e) => {
         const win = document.getElementById('playlist-window');
         const btn = document.getElementById('music-control-btn');
-        if (win.classList.contains('open') && !win.contains(e.target) && !btn.contains(e.target)) {
+        if (win && win.classList.contains('open') && !win.contains(e.target) && !btn.contains(e.target)) {
             win.classList.remove('open');
         }
     });
