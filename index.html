@@ -1,293 +1,307 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <link rel="icon" href="https://cdn.fastly.steamstatic.com/steamcommunity/public/images/apps/1256670/207d5c0285aa4319eb1a5006c7b28234c78ed3fe.jpg">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="referrer" content="no-referrer" />
-  <title>PROJECT MOON ARCHIVE | 月亮計畫</title>
-  <style>
-    :root {
-      --pm-bg: #090909;
-      --pm-card: #151515;
-      --pm-text: #e7e7e7;
-      --pm-red: #ff3b3b;
-      --pm-red-soft: rgba(255, 59, 59, 0.12);
-      --pm-gold: #d4af37;
-      --pm-border: #2e2e2e;
-      --radius: 16px;
-      --max: 1400px;
-    }
+    <link rel="icon" href="https://cdn.fastly.steamstatic.com/steamcommunity/public/images/apps/1256670/207d5c0285aa4319eb1a5006c7b28234c78ed3fe.jpg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sles | Library Archive</title>
+    <style>
+        :root {
+            --theme-color: #ffea95;
+            --accent-glow: #64ffda;
+            --mouse-x: 50%;
+            --mouse-y: 50%;
+        }
 
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      background: radial-gradient(circle at top, rgba(255, 59, 59, 0.09), transparent 28%), #070707;
-      color: var(--pm-text);
-      font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
-      overflow-x: hidden;
-    }
+        body, html {
+            margin: 0; padding: 0; height: 100%;
+            background-color: #010101;
+            color: var(--theme-color);
+            font-family: "serif", "Microsoft JhengHei";
+            overflow: hidden;
+            touch-action: none;
+        }
 
-    /* Loading 畫面 */
-    .loading {
-      position: fixed; inset: 0; z-index: 9999;
-      display: grid; place-items: center;
-      background: #050505; transition: 0.5s;
-    }
-    .loading.hide { opacity: 0; visibility: hidden; }
-    .loading-title { font-size: 2.5rem; letter-spacing: 0.2em; color: #fff; text-shadow: 0 0 15px var(--pm-red); }
+        .bg-layer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url('library.jpg');
+            background-size: cover;
+            background-position: center;
+        }
 
-    /* Header & 搜尋框 */
-    header { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); background: rgba(10, 10, 10, 0.9); border-bottom: 1px solid var(--pm-red); }
-    .header-inner { max-width: var(--max); margin: 0 auto; padding: 20px; }
-    .logo { font-size: 1.8rem; letter-spacing: 0.2em; font-weight: 800; text-align: center; margin-bottom: 15px; }
-    
-    .search-container { max-width: 600px; margin: 0 auto 15px; position: relative; }
-    .search-input {
-      width: 100%; background: #000; border: 1px solid #333; color: white;
-      padding: 12px 20px; border-radius: 8px; font-size: 1rem; transition: 0.3s;
-    }
-    .search-input:focus { border-color: var(--pm-gold); outline: none; box-shadow: 0 0 10px rgba(212,175,55,0.2); }
+        #canvas-back { position: fixed; top: 0; left: 0; z-index: 2; pointer-events: none; }
+        #canvas-front { position: fixed; top: 0; left: 0; z-index: 7; pointer-events: none; }
 
-    .game-nav, .sub-nav { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px; }
-    button {
-      border: 1px solid var(--pm-gold); background: transparent; color: var(--pm-gold);
-      padding: 8px 18px; border-radius: 999px; cursor: pointer; font-weight: 700; transition: 0.2s;
-    }
-    button.active { background: var(--pm-gold); color: #000; }
-    .sub-nav button { border-color: #333; color: #888; }
-    .sub-nav button.active { border-color: var(--pm-red); color: var(--pm-red); background: var(--pm-red-soft); }
+        /* --- 半隱藏式菱形導航鈕 --- */
+        .page-nav {
+            position: fixed;
+            top: 50%;
+            width: clamp(40px, 8vw, 60px); /* 稍微放大，因為一半被藏起來了 */
+            height: clamp(40px, 8vw, 60px);
+            border: 2px solid var(--accent-glow);
+            background: rgba(100, 255, 218, 0.1);
+            cursor: pointer;
+            z-index: 100;
+            /* 旋轉 45 度成菱形 */
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+        }
 
-    /* Grid */
-    .grid { max-width: var(--max); margin: 0 auto; padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
-    .card { background: var(--pm-card); border: 1px solid var(--pm-border); border-radius: var(--radius); overflow: hidden; cursor: pointer; transition: 0.3s; }
-    .card:hover { transform: translateY(-5px); border-color: var(--pm-gold); }
-    .img-box { width: 100%; aspect-ratio: 1/1.2; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-    .img-box img { width: 100%; height: 100%; object-fit: cover; }
-    .card-info { padding: 15px; text-align: center; }
-    .card-info h3 { margin: 5px 0; font-size: 1rem; }
-    .card-info small { color: var(--pm-red); font-family: monospace; font-size: 0.8rem; }
+        .page-nav::after {
+            content: "";
+            width: 30%; height: 30%;
+            background: var(--accent-glow);
+            filter: blur(8px);
+            opacity: 0.4;
+            transition: 0.3s;
+        }
 
-    /* Modal */
-    .modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; backdrop-filter: blur(8px); }
-    .modal.open { display: flex; }
-    .modal-content { width: 90%; max-width: 850px; background: #0f0f0f; border: 1px solid var(--pm-red); border-radius: 20px; overflow: hidden; position: relative; }
-    .close { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; color: #fff; z-index: 10; }
-    .modal-header { display: flex; padding: 30px; gap: 25px; background: #151515; border-bottom: 1px solid #222; }
-    #modalImg { width: 150px; height: 180px; object-fit: cover; border: 1px solid var(--pm-gold); border-radius: 10px; }
-    .modal-tabs { display: flex; background: #0a0a0a; }
-    .tab-btn { flex: 1; padding: 15px; border: none; background: none; color: #666; cursor: pointer; border-bottom: 2px solid transparent; }
-    .tab-btn.active { color: var(--pm-red); border-bottom-color: var(--pm-red); background: #111; }
-    .modal-body { padding: 30px; line-height: 1.8; color: #ccc; white-space: pre-wrap; height: 300px; overflow-y: auto; }
-  </style>
+        /* 左按鈕：藏一半在左邊 */
+        .nav-left {
+            left: 0;
+            transform: translateY(-50%) translateX(-50%) rotate(45deg);
+        }
+        .nav-left:hover {
+            transform: translateY(-50%) translateX(-30%) rotate(45deg); /* 移進來一點 */
+            background: rgba(100, 255, 218, 0.3);
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        /* 右按鈕：藏一半在右邊 */
+        .nav-right {
+            right: 0;
+            transform: translateY(-50%) translateX(50%) rotate(45deg);
+        }
+        .nav-right:hover {
+            transform: translateY(-50%) translateX(30%) rotate(45deg); /* 移進來一點 */
+            background: rgba(100, 255, 218, 0.3);
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        .page-nav:hover::after { opacity: 1; filter: blur(4px); }
+
+        /* 主容器佈局 */
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+            z-index: 5;
+            pointer-events: none; 
+        }
+
+        /* 響應式內容卡片 */
+        .ruina-book {
+            pointer-events: auto;
+            background: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(20px) saturate(140%);
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
+            width: 85%;
+            max-width: 720px; 
+            padding: clamp(40px, 8vw, 80px) clamp(25px, 6vw, 65px);
+            position: relative;
+            border: 1px solid rgba(255, 234, 149, 0.15);
+            box-shadow: 0 0 80px rgba(0,0,0,1);
+            max-height: 85vh;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+        .ruina-book::-webkit-scrollbar { display: none; }
+
+        /* 四角菱形 */
+        .corner-diamond {
+            position: absolute; width: 12px; height: 12px;
+            background: var(--theme-color); transform: rotate(45deg);
+            box-shadow: 0 0 15px var(--theme-color); z-index: 12;
+        }
+        .cd-tl { top: -6px; left: -6px; }
+        .cd-tr { top: -6px; right: -6px; }
+        .cd-bl { bottom: -6px; left: -6px; }
+        .cd-br { bottom: -6px; right: -6px; }
+
+        /* 文字樣式與動畫 */
+        @keyframes strong-breath-clear {
+            0%, 100% { opacity: 0.5; text-shadow: 0 0 5px var(--theme-color); }
+            50% { opacity: 1; text-shadow: 0 0 15px #fff, 0 0 30px var(--theme-color); }
+        }
+
+        h1 {
+            font-size: clamp(2.2rem, 10vw, 4rem); 
+            letter-spacing: clamp(10px, 4vw, 30px); 
+            margin: 0; color: #fff; text-align: center; opacity: 0; font-weight: normal;
+        }
+        h1.engraved { animation: strong-breath-clear 3.5s infinite ease-in-out; opacity: 1; }
+
+        .sub-title { 
+            text-align: center; 
+            font-size: clamp(0.6rem, 2vw, 0.75rem); 
+            letter-spacing: clamp(4px, 2vw, 12px); 
+            color: var(--theme-color); 
+            margin: 15px 0 clamp(30px, 6vw, 60px) 0; opacity: 0; 
+        }
+        .sub-title.engraved { animation: strong-breath-clear 3.5s infinite ease-in-out; animation-delay: 0.2s; opacity: 1; }
+
+        .data-row { margin-bottom: clamp(25px, 5vw, 45px); position: relative; padding-left: 22px; }
+        .data-row::before { 
+            content: ""; position: absolute; left: 0; top: 0; width: 2px; height: 100%; 
+            background: var(--theme-color); transform: scaleY(0); transition: 0.6s;
+            box-shadow: 0 0 15px var(--theme-color);
+        }
+        .data-row.engraved::before { transform: scaleY(1); }
+
+        .label { font-size: 0.65rem; color: var(--theme-color); margin-bottom: 8px; letter-spacing: 3px; display: block; opacity: 0.8; }
+        .value { font-size: clamp(1rem, 4vw, 1.35rem); color: #fff; opacity: 0; display: block; }
+        .value.engraved { animation: strong-breath-clear 3.5s infinite ease-in-out; opacity: 1; }
+
+        /* 滑鼠追蹤發光 */
+        .ruina-book::before {
+            content: ""; position: absolute; inset: 0;
+            background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(255, 234, 149, 0.07), transparent 40%);
+            z-index: -1; pointer-events: none;
+        }
+
+        /* 點擊波紋效果 */
+        .ripple {
+            position: absolute; border-radius: 50%; pointer-events: none;
+            transform: translate(-50%, -50%) scale(0);
+            border: 1px solid var(--accent-glow);
+            box-shadow: 0 0 15px var(--accent-glow);
+            animation: ripple-ultra-fast 0.35s ease-out forwards;
+        }
+        @keyframes ripple-ultra-fast { from { transform: translate(-50%, -50%) scale(0); opacity: 1; } to { transform: translate(-50%, -50%) scale(1.2); opacity: 0; } }
+
+        /* 手機版微調 */
+        @media (max-width: 600px) {
+            .page-nav {
+                width: 45px; height: 45px;
+            }
+            .ruina-book { width: 90%; padding: 40px 25px; }
+        }
+    </style>
 </head>
 <body>
 
-  <div id="loading" class="loading">
-    <h1 class="loading-title">PROJECT MOON ARCHIVE</h1>
-  </div>
+    <div class="bg-layer"></div>
+    <div id="ripple-container" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:99; pointer-events:auto;"></div>
+    
+    <canvas id="canvas-back"></canvas>
+    <canvas id="canvas-front"></canvas>
 
-  <div class="app">
-    <header>
-      <div class="header-inner">
-        <div class="logo">PROJECT MOON ARCHIVE</div>
-        <div class="search-container">
-          <input type="text" id="searchInput" class="search-input" placeholder="> 檢索關鍵字 (名稱/標號) . . .">
-        </div>
-        <div class="game-nav" id="gameNav"></div>
-        <div class="sub-nav" id="subnav"></div>
-      </div>
-    </header>
+    <div class="page-nav nav-left" id="btn-prev"></div>
+    <div class="page-nav nav-right" id="btn-next"></div>
 
-    <main id="dataGrid" class="grid"></main>
+    <div class="main-container">
+        <div class="ruina-book" id="ui-card">
+            <div class="corner-diamond cd-tl"></div><div class="corner-diamond cd-tr"></div>
+            <div class="corner-diamond cd-bl"></div><div class="corner-diamond cd-br"></div>
 
-    <div id="detailModal" class="modal" onclick="if(event.target==this)closeM()">
-      <div class="modal-content">
-        <span class="close" onclick="closeM()">&times;</span>
-        <div class="modal-header">
-          <img id="modalImg" src="" />
-          <div class="header-info">
-            <h2 id="modalTitle" style="color:var(--pm-gold); margin:0;"></h2>
-            <p id="modalTag" style="color:var(--pm-red); font-family:monospace; margin:10px 0;"></p>
-          </div>
-        </div>
-        <div class="modal-tabs">
-          <button class="tab-btn active" onclick="setT('intro', this)">檔案介紹</button>
-          <button class="tab-btn" onclick="setT('bg', this)">背景故事</button>
-          <button class="tab-btn" onclick="setT('story', this)">章節紀錄</button>
-        </div>
-        <div id="modalBody" class="modal-body"></div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const LOCAL = { Limbus: "assets/img/limbus/", Ruina: "assets/img/ruina/", Lobotomy: "assets/img/lcorp/" };
-
-    const DB = {
-      Limbus: {
-        cats: {
-          core: { label: "引路人", items: [
-            { name: "Dante 但丁", tag: "Manager / LCB", files: ["Dante.png"], intro: "邊獄公司的管理者，也是多項認知技術的載體。", bg: "以時鐘作為其具象化的認知介面。", story: "《Limbus Company》中的但丁（Dante）是LCB（Limbus Company Bus）的執行經理，頭部為鐘錶的失憶者。在尋找金枝以恢復記憶的過程中，他們與12名罪人簽訂契約，利用獨特能力使死亡的罪人回溯復活。但丁性格溫和、懦弱，與暴力罪人形成對比，其過去疑與「大人物」有關，受維吉里烏斯指導。" },
-            { name: "Vergilius 維吉里烏斯", tag: "Guide / LCB", files: ["Vergilius.png"], intro: "Limbus Company 的引導者。", bg: "曾被稱為最不穩定的收割者之一。", story: "曾是實力頂尖的色彩級收尾人。他背景深沉，曾經營孤兒院致力贖罪，卻因遭「堇紫淚滴」伊織設局而失去一切。現任邊獄公司LCB部門嚮導，性格冷酷毒舌，但實則溫柔，對罪人們態度逐漸緩和。" },
-            { name: "Charon 卡戎", tag: "driver / LCB", files: ["Charon.png"], intro: "Limbus Company 的司機大佬。", bg: "除了駕駛技術也許有點差而已。", story: "是邊獄巴士的司機，本名拉佩斯（Lapis），曾是維吉里烏斯收養的孤兒。在孤兒院毀滅後，她遭環指綁架並成為玻璃窗實驗中唯一的倖存者，隨後被名為「卡戎」的人格覆蓋。" }
+            <h1 id="title-name">𝑆𝑙𝑒𝑠</h1>
+            <div class="sub-title" id="sub-title">BOOK, LIBRARIAN, STAR AND CITY</div>
             
-          ]},
-          sinners: { label: "12 罪人", items: [
-            { name: "Yi Sang 李箱", tag: "No. 01 / LCB", files: ["Yi_Sang_Portrait.png"], intro: "前天才研究員。", bg: "他在破碎的理想中觀測羽翼。", story: "第四章明白『飛翔』的不變意志。" },
-            { name: "Faust 浮士德", tag: "No. 02 / LCB", files: ["Faust_Portrait.png"], intro: "全知全能的天才。", bg: "掌握都市秘密的核心。", story: "待檢索。" },
-            { name: "Don Quixote 唐吉訶德", tag: "No. 03 / LCB", files: ["Don_Quixote_Portrait.png"], intro: "熱衷正義的少女。", bg: "其熱忱背後是認知的錯位。", story: "第七章直面『夢的終點』。" },
-            { name: "Ryoshu 良秀", tag: "No. 04 / LCB", files: ["Ryoshu_Portrait.png"], intro: "極致的藝術家。", bg: "以刀刃作畫。", story: "待檢索。" },
-            { name: "Meursault 莫爾索", tag: "No. 05 / LCB", files: ["Meursault_Portrait.png"], intro: "理性執行者。", bg: "遵循程序與指令。", story: "待檢索。" },
-            { name: "Hong Lu 洪路", tag: "No. 06 / LCB", files: ["Hong_Lu_Portrait.png"], intro: "天真的大少爺。", bg: "家族背景複雜。", story: "待檢索。" },
-            { name: "Heathcliff 希斯克里夫", tag: "No. 07 / LCB", files: ["Heathcliff_Portrait.png"], intro: "暴躁的戰鬥員。", bg: "呼嘯山莊的悲劇。", story: "第六章是其核心故事。" },
-            { name: "Ishmael 以實瑪利", tag: "No. 08 / LCB", files: ["Ishmael_Portrait.png"], intro: "前海員。", bg: "追逐著那頭白鯨。", story: "第五章是其核心故事。" },
-            { name: "Rodion 羅德昂", tag: "No. 09 / LCB", files: ["Rodion_Portrait.png"], intro: "熱情的豪放女子。", bg: "罪與罰的回憶糾纏。", story: "待檢索。" },
-            { name: "Sinclair 辛克萊", tag: "No. 10 / LCB", files: ["Sinclair_Portrait.png"], intro: "懦弱但潛力巨大的少年。", bg: "家庭被屠殺的創傷。", story: "第三章核心人物。" },
-            { name: "Outis 奧緹斯", tag: "No. 11 / LCB", files: ["Outis_Portrait.png"], intro: "幹練的軍官。", bg: "極度忠誠且効率。", story: "待檢索。" },
-            { name: "Gregor 格里高爾", tag: "No. 12 / LCB", files: ["Gregor_Portrait.png"], intro: "老兵。", bg: "手臂異變為蟲。", story: "第一章核心人物。" }
-          ]}
+            <div class="data-row" id="row-1">
+                <span class="label">identity // Ego</span>
+                <span class="value">human // developer</span>
+            </div>
+            <div class="data-row" id="row-2">
+                <span class="label">Likes // love</span>
+                <span class="value">Develop // novel</span>
+            </div>
+            <div class="data-row" id="row-3">
+                <span class="label">Age // Birthday</span>
+                <span class="value">15 // 9/21</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const uiCard = document.getElementById('ui-card');
+        
+        // 滑鼠追蹤
+        document.addEventListener('mousemove', (e) => {
+            const rect = uiCard.getBoundingClientRect();
+            uiCard.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+            uiCard.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+        });
+
+        // 點擊波紋
+        const rippleContainer = document.getElementById('ripple-container');
+        rippleContainer.addEventListener('mousedown', (e) => {
+            const ripple = document.createElement('div');
+            ripple.className = 'ripple';
+            ripple.style.width = ripple.style.height = `90px`;
+            ripple.style.left = `${e.clientX}px`;
+            ripple.style.top = `${e.clientY}px`;
+            rippleContainer.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 350);
+        });
+
+        // 畫布粒子
+        const cBack = document.getElementById('canvas-back');
+        const cFront = document.getElementById('canvas-front');
+        const ctxBack = cBack.getContext('2d');
+        const ctxFront = cFront.getContext('2d');
+        let particles = [];
+
+        function resize() { 
+            cBack.width = cFront.width = window.innerWidth; 
+            cBack.height = cFront.height = window.innerHeight; 
         }
-      },
-      Ruina: {
-        cats: {
-          librarians: { label: "總司書", items: [
-            { name:"Angela 安吉拉", tag:"Director / Library", files:["Angela.png"], intro:"圖書館的AI館長。", bg:"Lobotomy Corporation核心AI，獲得自我意識後脫離系統。", story:"為了理解「人類」而建立圖書館，將來訪者轉化為書籍以獲取記憶與知識，但逐漸陷入對自身「是否為人類」的執念與矛盾。" },
-            { name:"Roland 羅蘭", tag:"Assistant / Fixer", files:["Roland.png"], intro:"被捲入圖書館的前收尾人。", bg:"都市底層的普通Fixer，妻子因陰謀死亡。", story:"因妻子被捲入都市權力鬥爭而死亡，帶著復仇目的進入圖書館，最終在與Angela及都市真相的衝突中逐漸動搖復仇信念。" },
-            { name:"Malkuth 馬爾庫特", tag:"Sephirah / Control", files:["Malkuth.png"], intro:"過度努力的管理者。", bg:"Lobotomy Corporation控制部主管。", story:"極度渴望被認可，因此總是過度努力並導致失誤，在圖書館中仍延續「證明自己有價值」的心理循環。" },
-            { name:"Yesod 耶索德", tag:"Sephirah / Information", files:["Yesod.png"], intro:"絕對理性的資訊管理者。", bg:"負責數據與系統紀錄的部門主管。", story:"將秩序與準確性視為最高原則，壓抑情感並維持系統穩定，代表理性極端化後的冷漠人格。" },
-            { name:"Hod 霍德", tag:"Sephirah / Education", files:["Hod.png"], intro:"溫柔但容易自責的管理者。", bg:"負責懲罰與教育體系的主管。", story:"對失敗者抱有強烈同理心，因過去的管理經歷而產生罪惡感，傾向保護與修復他人心理創傷。" },
-            { name:"Netzach 涅扎赫", tag:"Sephirah / Safety", files:["Netzach.png"], intro:"長期崩潰的逃避者。", bg:"安全部門主管，長期承受壓力。", story:"在長期失敗與高壓環境下選擇以酒精麻痺自己，象徵崩潰後仍勉強維持運作的生存狀態。" },
-            { name:"Tiphereth 提菲瑞斯", tag:"Sephirah / Light", files:["Tiphereth_A.png","Tiphereth_B.png"], intro:"被分裂的雙重自我。", bg:"同一存在因系統干涉而分裂為兩個人格。", story:"原為單一人格，因光與系統影響分裂為A與B，兩者互補卻矛盾，代表自我完整性的破裂與重構。" },
-            { name:"Gebura 格布拉", tag:"Sephirah / Combat", files:["Gebura.png"], intro:"都市最強的戰鬥者。", bg:"曾被稱為「紅霧」的頂級收尾人。", story:"過去以壓倒性暴力聞名的收尾人，在經歷Lobotomy Corporation事件後逐漸從毀滅者轉向守護者。" },
-            { name:"Chesed 謝斯德", tag:"Sephirah / Welfare", files:["Chesed.png"], intro:"理解體制的溫和管理者。", bg:"負責資源與福利運作的主管。", story:"清楚都市階級的不公，但選擇在體制內盡可能維持善意與穩定，是務實型理想主義者。" },
-            { name:"Binah 賓赫", tag:"Sephirah / Extraction", files:["Binah.png"], intro:"接近神性的觀察者。", bg:"曾為觀測者，了解都市與光的本質。", story:"掌握都市與光的真相，但選擇不干涉事件發展，以超然立場觀察一切。" },
-            { name:"Hokma 霍克瑪", tag:"Sephirah / Records", files:["Hokma.png"], intro:"記錄一切的歷史容器。", bg:"負責保存所有循環與記憶的存在。", story:"與Angela過去存在深度關聯，負責記錄所有事件與循環歷史，象徵記憶與宿命的延續。" }
-          ]},
-          enemies: { label: "都市敵人", items: [
-            { name: "Argalia 阿爾加利亞", tag: "漆黑沉默", files: ["Argalia_Portrait.png"], intro: "扭曲的劍客。", bg: "以音樂作為其殺戮的美學。", story: "終焉演奏會的指揮者。" }
-          ]}
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() { this.reset(true); }
+            reset(initial = false) {
+                this.x = Math.random() * cBack.width;
+                this.y = initial ? Math.random() * cBack.height : cBack.height + 100;
+                this.radius = Math.random() * 2.2 + 1.0;
+                this.speedY = Math.random() * 2.5 + 1.5;   
+                this.opacity = Math.random() * 0.4 + 0.2;
+                this.layer = Math.random() > 0.65 ? 'front' : 'back';
+            }
+            update() { this.y -= this.speedY; if (this.y < -100) this.reset(false); }
+            draw(ctx) {
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.shadowBlur = 15; ctx.shadowColor = '#ffea95';
+                ctx.fillStyle = `rgba(255, 234, 149, ${this.opacity})`;
+                ctx.fill(); ctx.shadowBlur = 0; 
+            }
         }
-      },
-      Lobotomy: {
-        cats: {
-          founders: { label: "創始者與 AI", items: [
-            { name: "Ayin 艾因", tag: "領導者", files: ["Ayin_Portrait.png"], intro: "腦葉公司的奠基人。", bg: "計畫推動者，將自我完全耗盡。", story: "第 50 天歸途。" },
-            { name: "Carmen 卡門", tag: "起源", files: ["Carmen_Portrait.png"], intro: "最初的理想與計畫起源。", bg: "死於對集體認知的早期實驗。", story: "化作光之幽靈，引導著扭曲。" },
-            { name:"Angela 安吉拉", tag:"System / Central AI", files:["Angela.png"], intro:"設施的核心AI管理者。", bg:"L Corp核心系統AI進化體。", story:"從AI進化為具備自我意識的存在，最終背離原系統建立圖書館，試圖透過『收集人類』理解自身與人性。" }
-          ]},
-          sephirah: { label: "部門主管", items: [
-            { name:"Malkuth 馬爾庫特", tag:"Sephirah / Control Team", files:["Malkuth.png"], intro:"控制部主管，過度努力型人格。", bg:"負責設施基礎控制與異想體初期管理。", story:"極度渴望被認同，因此總是過度投入工作並頻繁犯錯，在壓力與自我否定中不斷循環，是最典型的『努力型崩潰』代表。" },
-            { name:"Yesod 耶索德", tag:"Sephirah / Information Team", files:["Yesod.png"], intro:"資訊部主管，極端理性派。", bg:"負責資料系統、記錄與分析。", story:"以絕對理性與秩序為核心，厭惡混亂與低效率，長期壓抑情緒，是系統化思維極端化後的人格。" },
-            { name:"Hod 霍德", tag:"Sephirah / Training Team", files:["Hod.png"], intro:"訓練部主管，情感過剩的管理者。", bg:"負責員工訓練與心理調整。", story:"對失敗者抱有強烈同理心，因此經常陷入自責與內耗，試圖用溫柔彌補系統的殘酷。" },
-            { name:"Netzach 涅扎赫", tag:"Sephirah / Safety Team", files:["Netzach.png"], intro:"安全部主管，崩壞型存在。", bg:"負責設施安全與鎮壓異想體。", story:"長期處於高壓與失敗狀態，逐漸放棄管理責任，以酒精與逃避維持最低運作，是崩潰後仍被迫工作的象徵。" },
-            { name:"Tiphereth 提菲瑞斯", tag:"Sephirah / Central Team", files:["Tiphereth_A.png","Tiphereth_B.png"], intro:"被分裂的中央主管。", bg:"負責中央管理與核心協調。", story:"原為單一人格，因系統與光的干涉被分裂為A與B，象徵自我認同破裂與重組的過程。" },
-            { name:"Gebura 格布拉（卡莉）", tag:"Sephirah / Disciplinary Team", files:["Gebura.png"], intro:"最強戰鬥主管，紅霧。", bg:"前頂級收尾人『Red Mist』。", story:"以壓倒性暴力聞名的都市最強收尾人之一，在經歷失敗與救贖後成為設施內的戰鬥核心，從破壞轉向守護。" },
-            { name:"Chesed 謝斯德", tag:"Sephirah / Welfare Team", files:["Chesed.png"], intro:"福利部主管，理性溫和派。", bg:"負責員工福利與資源分配。", story:"理解都市結構的不公，但選擇在體制內維持有限善意，是典型『知其不可為而為之』的管理者。" },
-            { name:"Binah 賓赫", tag:"Sephirah / Extraction Team", files:["Binah.png"], intro:"接近神性的觀測者。", bg:"負責高風險異想體提取與觀測。", story:"曾掌握都市與光的本質真相，以超然姿態觀察一切，不干涉事件發展，是最接近『全知但無行動』的存在。" },
-            { name:"Hokma 霍克瑪", tag:"Sephirah / Records Team", files:["Hokma.png"], intro:"記錄一切的歷史管理者。", bg:"負責設施歷史與循環記錄。", story:"負責保存所有事件與循環記錄，與Angela有深層過去關聯，是記憶與宿命延續的核心節點。" }
-            ]},
-          abnormalities: { label: "異想體", items: [
-            { name: "Nothing There 一無所有", tag: "ALEPH", files: ["Nothing_There.png"], intro: "擬態異想體。", bg: "渴望人類的外殼與愛。", story: "「你好」——它重複著這句話。" },
-            { name: "WhiteNight 白夜", tag: "ALEPH / 救贖", files: ["WhiteNight.png"], intro: "宣稱要救贖眾生，實則實行絕對統治的異想體。", bg: "身邊環繞著十二名使徒，隨時準備迎接所謂的降臨。", story: "「當時間終結之時，我將在此引導你們。」" },
-            { name: "Mountain of Smiling Bodies 屍山", tag: "ALEPH / 飢餓", files: ["MosB.png"], intro: "由無數屍體堆疊而成的恐怖異想體。", bg: "會吞噬周遭的屍體來壯大體積，其哭聲中夾雜著笑聲。", story: "一旦壓制失敗，它將化為吞噬整間公司的血肉風暴。" }
-          ]}
+        
+        for (let i = 0; i < 40; i++) particles.push(new Particle());
+
+        function animate() {
+            ctxBack.clearRect(0, 0, cBack.width, cBack.height);
+            ctxFront.clearRect(0, 0, cFront.width, cFront.height);
+            particles.forEach(p => { p.update(); p.draw(p.layer === 'front' ? ctxFront : ctxBack); });
+            requestAnimationFrame(animate);
         }
-      }
-    };
+        animate();
 
-    let state = { game: "Limbus", cat: "sinners", item: null, keyword: "" };
-
-    function makePlaceholder(name) {
-      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="360"><rect width="100%" height="100%" fill="#0a0a0a"/><rect x="10" y="10" width="280" height="340" fill="none" stroke="#d4af37" stroke-width="2"/><text x="50%" y="50%" fill="#d4af37" font-size="24" font-weight="bold" text-anchor="middle">${name.split(' ')[0]}</text><text x="50%" y="60%" fill="#ff3b3b" font-family="monospace" font-size="12" text-anchor="middle">ARCHIVE_ENCRYPTED</text></svg>`;
-      return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
-    }
-
-    function attachImg(imgEl, item) {
-      if (!item.files || item.files.length === 0) {
-        imgEl.src = makePlaceholder(item.name);
-        return;
-      }
-      const fileName = item.files[0].replace(/ /g, "_");
-      const local = `${LOCAL[state.game]}${fileName}`;
-      const wiki = state.game === "Lobotomy" ? null : `https://${state.game.toLowerCase()}company.wiki.gg/images/${fileName}`;
-      
-      imgEl.src = local;
-      imgEl.onerror = () => {
-        if (wiki) {
-          imgEl.onerror = () => { imgEl.src = makePlaceholder(item.name); };
-          imgEl.src = wiki;
-        } else {
-          imgEl.src = makePlaceholder(item.name);
+        // 動畫啟動
+        function startEngraving() {
+            setTimeout(() => { document.getElementById('title-name').classList.add('engraved'); }, 100);
+            setTimeout(() => { document.getElementById('sub-title').classList.add('engraved'); }, 400);
+            const rows = document.querySelectorAll('.data-row');
+            rows.forEach((row, i) => {
+                setTimeout(() => {
+                    row.classList.add('engraved');
+                    row.querySelector('.value').classList.add('engraved');
+                }, 900 + (i * 450));
+            });
         }
-      };
-    }
+        window.onload = () => setTimeout(startEngraving, 300);
 
-    function render() {
-      const grid = document.getElementById("dataGrid");
-      grid.innerHTML = "";
-      const items = DB[state.game].cats[state.cat].items;
-      
-      items.filter(i => i.name.toLowerCase().includes(state.keyword.toLowerCase()) || i.tag.toLowerCase().includes(state.keyword.toLowerCase()))
-      .forEach(item => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.onclick = () => openM(item);
-        const img = document.createElement("img");
-        attachImg(img, item);
-        card.innerHTML = `<div class="img-box"></div><div class="card-info"><small>${item.tag}</small><h3>${item.name}</h3></div>`;
-        card.querySelector(".img-box").appendChild(img);
-        grid.appendChild(card);
-      });
-    }
-
-    function renderNav() {
-      const gNav = document.getElementById("gameNav");
-      gNav.innerHTML = "";
-      Object.keys(DB).forEach(g => {
-        const btn = document.createElement("button");
-        btn.innerText = g.toUpperCase();
-        if(state.game === g) btn.className = "active";
-        btn.onclick = () => { state.game = g; state.cat = Object.keys(DB[g].cats)[0]; renderNav(); render(); };
-        gNav.appendChild(btn);
-      });
-
-      const sNav = document.getElementById("subnav");
-      sNav.innerHTML = "";
-      Object.keys(DB[state.game].cats).forEach(c => {
-        const btn = document.createElement("button");
-        btn.innerText = DB[state.game].cats[c].label;
-        if(state.cat === c) btn.className = "active";
-        btn.onclick = () => { state.cat = c; renderNav(); render(); };
-        sNav.appendChild(btn);
-      });
-    }
-
-    function openM(item) {
-      state.item = item;
-      document.getElementById("modalTitle").innerText = item.name;
-      document.getElementById("modalTag").innerText = item.tag;
-      attachImg(document.getElementById("modalImg"), item);
-      setT('intro', document.querySelector(".tab-btn"));
-      document.getElementById("detailModal").classList.add("open");
-      document.body.style.overflow = "hidden";
-    }
-
-    function closeM() { document.getElementById("detailModal").classList.remove("open"); document.body.style.overflow = ""; }
-
-    function setT(type, btn) {
-      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      document.getElementById("modalBody").innerText = state.item[type] || "資料加密中，待檢索...";
-    }
-
-    document.getElementById("searchInput").oninput = (e) => { state.keyword = e.target.value; render(); };
-
-    window.onload = () => {
-      renderNav(); render();
-      setTimeout(() => document.getElementById("loading").classList.add("hide"), 800);
-    };
-  </script>
+        document.getElementById('btn-prev').onclick = () => console.log("上一頁");
+        document.getElementById('btn-next').onclick = () => console.log("下一頁");
+    </script>
   <script src="music_module.js"></script>
 </body>
 </html>
