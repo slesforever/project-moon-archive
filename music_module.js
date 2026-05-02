@@ -44,54 +44,51 @@
     `;
     document.body.appendChild(container);
 
-    // --- 載入 YouTube API ---
+    // --- 載入 API ---
     const tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
-    const firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    document.head.appendChild(tag);
 
     window.onYouTubeIframeAPIReady = function() {
         player = new YT.Player('youtube-player', {
             height: '0', width: '0',
             videoId: tracks[currentTrackIndex].id,
-            playerVars: { 
-                'autoplay': 1, 
-                'mute': 1, // 先靜音播放，這是為了騙過瀏覽器的限制
-                'controls': 0 
-            },
+            playerVars: { 'autoplay': 1, 'mute': 1, 'controls': 0 },
             events: {
                 'onReady': (e) => { 
-                    initUI(); 
-                    e.target.playVideo(); // 嘗試開始播放 (靜音)
-                    setupUnmuteTrigger(); // 監聽玩家動作來取消靜音
+                    initUI();
+                    e.target.playVideo(); // 悄悄靜音播放
+                    startDetection(); 
                 },
                 'onStateChange': (e) => { if (e.data == YT.PlayerState.ENDED) nextTrack(); }
             }
         });
     };
 
-    // --- 核心：偵測動作並恢復音量 ---
-    function setupUnmuteTrigger() {
-        const unmute = () => {
+    function startDetection() {
+        const tryUnmute = () => {
             if (isUnmuted) return;
-            player.unMute(); // 取消靜音
-            player.setVolume(50); // 設定音量
-            player.playVideo(); // 確保是在播放狀態
-            isUnmuted = true;
-            showNotice(tracks[currentTrackIndex].name);
+            player.unMute();
+            player.setVolume(50);
             
-            // 成功解鎖後移除監聽器
-            window.removeEventListener('click', unmute);
-            window.removeEventListener('scroll', unmute);
-            window.removeEventListener('keydown', unmute);
-            window.removeEventListener('touchstart', unmute);
+            // 檢查是否成功出聲
+            if (player.isMuted() === false) {
+                isUnmuted = true;
+                showNotice(tracks[currentTrackIndex].name);
+                console.log("Audio Unlocked via interaction");
+                // 移除所有監聽
+                ['mousedown', 'wheel', 'keydown', 'touchstart', 'mousemove'].forEach(evt => {
+                    window.removeEventListener(evt, tryUnmute);
+                });
+            }
         };
 
-        // 監聽更多有效動作 (點擊、滾動、按鍵)
-        window.addEventListener('click', unmute);
-        window.addEventListener('scroll', unmute);
-        window.addEventListener('keydown', unmute);
-        window.addEventListener('touchstart', unmute);
+        // 監聽所有可能的動作：點擊、滾輪、按鍵、甚至是滑鼠大面積移動
+        window.addEventListener('mousedown', tryUnmute);
+        window.addEventListener('wheel', tryUnmute);
+        window.addEventListener('keydown', tryUnmute);
+        window.addEventListener('touchstart', tryUnmute);
+        window.addEventListener('mousemove', tryUnmute); // 雖然機率低，但有些瀏覽器會過
     }
 
     function initUI() {
@@ -99,17 +96,12 @@
             e.stopPropagation();
             document.getElementById('playlist-window').classList.toggle('open');
         };
-        
         const content = document.getElementById('playlist-content');
         tracks.forEach((t, i) => {
             const item = document.createElement('div');
             item.className = `track-item ${i === currentTrackIndex ? 'active' : ''}`;
             item.innerText = `${i + 1}. ${t.name}`;
-            item.onclick = (e) => { 
-                e.stopPropagation(); 
-                isUnmuted = true; // 手動點擊清單時也視為解鎖
-                playTrack(i); 
-            };
+            item.onclick = (e) => { e.stopPropagation(); isUnmuted = true; playTrack(i); };
             content.appendChild(item);
         });
     }
@@ -117,12 +109,8 @@
     function playTrack(i) {
         currentTrackIndex = i;
         player.loadVideoById(tracks[i].id);
-        player.unMute(); // 確保有聲音
-        
-        document.querySelectorAll('.track-item').forEach((el, idx) => {
-            el.classList.toggle('active', idx === i);
-        });
-        
+        player.unMute();
+        document.querySelectorAll('.track-item').forEach((el, idx) => el.classList.toggle('active', idx === i));
         showNotice(tracks[i].name);
         document.getElementById('playlist-window').classList.remove('open');
     }
@@ -138,12 +126,4 @@
         note.classList.add('show');
         setTimeout(() => note.classList.remove('show'), 4000);
     }
-
-    window.addEventListener('click', (e) => {
-        const win = document.getElementById('playlist-window');
-        const btn = document.getElementById('music-control-btn');
-        if (win && win.classList.contains('open') && !win.contains(e.target) && !btn.contains(e.target)) {
-            win.classList.remove('open');
-        }
-    });
 })();
