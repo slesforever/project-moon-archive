@@ -1,5 +1,4 @@
 (function() {
-    // 1. 曲目資料庫
     const tracks = [
         { name: "Malkuth Battle 3", id: "aeIXVi6iXFI" },
         { name: "Malkuth Story", id: "LhoSpUKQEbU" },
@@ -12,8 +11,9 @@
 
     let player;
     let currentTrackIndex = 0;
+    let hasInteracted = false; // 標記是否已解鎖
 
-    // 2. 自動注入 CSS 樣式
+    // --- 自動注入 CSS ---
     const style = document.createElement('style');
     style.innerHTML = `
         .music-note { position: fixed; bottom: 85px; right: 20px; background: rgba(0,0,0,0.9); border-left: 4px solid #ff3b3b; padding: 12px 20px; border-radius: 8px; color: white; font-size: 14px; z-index: 9999; transform: translateX(150%); transition: 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28); box-shadow: 0 10px 30px rgba(0,0,0,0.5); pointer-events: none; font-family: sans-serif; }
@@ -31,7 +31,7 @@
     `;
     document.head.appendChild(style);
 
-    // 3. 自動注入 HTML 結構
+    // --- 自動注入 HTML ---
     const container = document.createElement('div');
     container.innerHTML = `
         <div id="music-notification" class="music-note"></div>
@@ -44,34 +44,67 @@
     `;
     document.body.appendChild(container);
 
-    // 4. 載入 YouTube API 腳本
+    // --- 載入 YouTube API ---
     const tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     const firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-    // 5. YouTube 播放器邏輯
     window.onYouTubeIframeAPIReady = function() {
         player = new YT.Player('youtube-player', {
             height: '0', width: '0',
             videoId: tracks[currentTrackIndex].id,
+            playerVars: { 'autoplay': 1, 'controls': 0 },
             events: {
-                'onReady': () => { initUI(); },
+                'onReady': () => { 
+                    initUI(); 
+                    setupAutoplayTrigger(); // 啟動滑鼠偵測
+                },
                 'onStateChange': (e) => { if (e.data == YT.PlayerState.ENDED) nextTrack(); }
             }
         });
     };
 
+    // --- 關鍵核心：滑鼠移動觸發播放 ---
+    function setupAutoplayTrigger() {
+        const unlock = () => {
+            if (hasInteracted) return;
+            
+            // 嘗試播放
+            player.playVideo();
+            
+            // 檢查是否播放成功 (如果播放器狀態變成 1 或 3，代表解鎖成功)
+            const state = player.getPlayerState();
+            if (state === 1 || state === 3 || state === -1) {
+                // 只要沒報錯，我們就視為嘗試過
+                hasInteracted = true;
+                showNotice(tracks[currentTrackIndex].name);
+                
+                // 移除監聽器，節省效能
+                window.removeEventListener('mousemove', unlock);
+                window.removeEventListener('mousedown', unlock);
+                window.removeEventListener('keydown', unlock);
+            }
+        };
+
+        // 監聽多種行為來確保最高成功率
+        window.addEventListener('mousemove', unlock);
+        window.addEventListener('mousedown', unlock);
+        window.addEventListener('keydown', unlock);
+    }
+
     function initUI() {
-        const btn = document.getElementById('music-control-btn');
-        btn.onclick = () => document.getElementById('playlist-window').classList.toggle('open');
+        document.getElementById('music-control-btn').onclick = (e) => {
+            e.stopPropagation();
+            document.getElementById('playlist-window').classList.toggle('open');
+        };
         
         const content = document.getElementById('playlist-content');
         tracks.forEach((t, i) => {
             const item = document.createElement('div');
             item.className = `track-item ${i === currentTrackIndex ? 'active' : ''}`;
             item.innerText = `${i + 1}. ${t.name}`;
-            item.onclick = () => playTrack(i);
+            item.onclick = (e) => { e.stopPropagation(); playTrack(i); };
             content.appendChild(item);
         });
     }
@@ -80,17 +113,11 @@
         currentTrackIndex = i;
         player.loadVideoById(tracks[i].id);
         
-        // 更新 UI 狀態
         document.querySelectorAll('.track-item').forEach((el, idx) => {
             el.classList.toggle('active', idx === i);
         });
         
-        // 顯示通知
-        const note = document.getElementById('music-notification');
-        note.innerHTML = `<div style="font-size:10px; color:#888;">Now Playing</div><b>${tracks[i].name}</b>`;
-        note.classList.add('show');
-        setTimeout(() => note.classList.remove('show'), 4000);
-        
+        showNotice(tracks[i].name);
         document.getElementById('playlist-window').classList.remove('open');
     }
 
@@ -99,7 +126,13 @@
         playTrack(currentTrackIndex);
     }
 
-    // 點擊外部關閉
+    function showNotice(name) {
+        const note = document.getElementById('music-notification');
+        note.innerHTML = `<div style="font-size:10px; color:#888;">Now Playing</div><b>${name}</b>`;
+        note.classList.add('show');
+        setTimeout(() => note.classList.remove('show'), 4000);
+    }
+
     window.addEventListener('click', (e) => {
         const win = document.getElementById('playlist-window');
         const btn = document.getElementById('music-control-btn');
@@ -107,5 +140,4 @@
             win.classList.remove('open');
         }
     });
-
 })();
